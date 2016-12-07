@@ -7,12 +7,13 @@ public class AccountBuilder {
 	private String phone;
 	private String name;
 	private AccountType type;
+	private String password;
 
 	AccountBuilder() {
 	}
 
 	public Account build() {
-		return new Account(id, email, phone, name, type);
+		return new Account(id, email, password, phone, name, type);
 	}
 
 	public AccountBuilder setId(int id) {
@@ -39,5 +40,12 @@ public class AccountBuilder {
 		this.type = type;
 		return this;
 	}
+
+	public AccountBuilder setPassword(String password) {
+		this.password = password;
+		return this;
+	}
+	
+	
 
 }

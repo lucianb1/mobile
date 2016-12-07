@@ -6,15 +6,17 @@ public class Account {
 	private final String email;
 	private final String phone;
 	private final String name;
+	private final String password;
 	private final AccountType type;
 	// private final boolean isFacebook;
 
-	Account(int id, String email, String phone, String name, AccountType type) {
+	Account(int id, String email, String password, String phone, String name, AccountType type) {
 		this.id = id;
 		this.email = email;
 		this.phone = phone;
 		this.name = name;
 		this.type = type;
+		this.password = password;
 	}
 	
 	public static AccountBuilder builder() {
@@ -27,7 +29,8 @@ public class Account {
 				.setId(id)
 				.setName(name)
 				.setPhone(phone)
-				.setType(type);
+				.setType(type)
+				.setPassword(password);
 	}
 
 	public int getId() {
@@ -50,4 +53,7 @@ public class Account {
 		return type;
 	}
 
+	public String getPassword() {
+		return password;
+	}
 }

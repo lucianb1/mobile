@@ -1,13 +1,10 @@
 package ro.hoptrop.repository;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ro.hoptrop.core.exceptions.NotFoundException;
@@ -44,6 +41,12 @@ public class RememberMeTokenRepository {
 	public void deleteToken(int id) {
 		String sql = "DELETE FROM remember_me_tokens WHERE id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
+		jdbcTemplate.update(sql, params);
+	}
+	
+	public void deleteToken(String token) {
+		String sql = "DELETE FROM remember_me_tokens WHERE token = :token";
+		MapSqlParameterSource params = new MapSqlParameterSource().addValue("token", token);
 		jdbcTemplate.update(sql, params);
 	}
 	
