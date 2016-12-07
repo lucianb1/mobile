@@ -1,6 +1,11 @@
 package ro.hoptrop.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +15,7 @@ import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.token.RememberMeToken;
 import ro.hoptrop.repository.AccountRepository;
 import ro.hoptrop.repository.RememberMeTokenRepository;
-import ro.hoptrop.security.mobile.UserAuthenticationResponse;
+import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.AuthenticationService;
 import ro.hoptrop.utils.TokenUtils;
 import ro.hoptrop.web.MobileLoginResponse;
@@ -28,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private AccountRepository accountRepository;
 
 	@Override
-	public UserAuthenticationResponse authenticateByToken(String token) {
+	public PrincipalUser authenticateByToken(String token) {
 		RememberMeToken rememberMeToken = null;
 		try {
 			rememberMeToken = tokenRepository.findToken(token);
@@ -36,7 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new SecurityException("Token not found");
 		}
 		Account account = accountRepository.findAccount(rememberMeToken.getAccountID());
-		return mapToAuthenticationResponse(account);
+		return mapToPrincipal(account);
 	}
 	
 	@Override
@@ -66,19 +71,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return token;
 	}
 	
-	public UserAuthenticationResponse mapToAuthenticationResponse(Account account) {
-		return new UserAuthenticationResponse()
-				.setEmail(account.getEmail())
-				.setAccountType(account.getType());
+	public PrincipalUser mapToPrincipal(Account account) {
+		return new PrincipalUser(account.getEmail(), "", createAuthorities(account.getType().name()))
+				.setName(account.getName())
+				.setPhone(account.getPhone());
 	}
 	
 	private MobileLoginResponse mapToLoginResponse(Account account, String token) {
-		UserAuthenticationResponse authenticationResponse = new UserAuthenticationResponse()
-				.setEmail(account.getEmail())
-				.setAccountType(account.getType());
 		return new MobileLoginResponse()
 				.setToken(token)
-				.setUser(authenticationResponse);
+				.setUser(mapToPrincipal(account));
+	}
+	
+	private List<GrantedAuthority> createAuthorities(String role) {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority(role));
+		return authorities;
 	}
 
 }

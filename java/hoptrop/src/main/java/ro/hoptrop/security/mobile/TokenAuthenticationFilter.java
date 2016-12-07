@@ -1,6 +1,7 @@
 package ro.hoptrop.security.mobile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
@@ -50,12 +51,11 @@ public class TokenAuthenticationFilter extends GenericFilterBean {
 
 			LOG.info("Token provided: " + token);
 
-			UserAuthenticationResponse authResponse = authenticationService.authenticateByToken(token);
+			PrincipalUser principal = authenticationService.authenticateByToken(token);
 
 			final TokenAuthentication tokenAuthentication = new TokenAuthentication();
 			tokenAuthentication.setAuthenticated(true);
 			tokenAuthentication.setToken(token);
-			PrincipalUser principal = new PrincipalUser(authResponse.getEmail(), EMPTY_PASSWORD, new ArrayList<GrantedAuthority>()); // TODO set role
 			tokenAuthentication.setPrincipal(principal);
 			final Authentication auth = authenticationManager.authenticate(tokenAuthentication);
 

@@ -1,17 +1,17 @@
 package ro.hoptrop.web;
 
-import ro.hoptrop.security.mobile.UserAuthenticationResponse;
+import ro.hoptrop.security.PrincipalUser;
 
 public class MobileLoginResponse {
 
-	private UserAuthenticationResponse user;
+	private PrincipalUser user;
 	private String token;
 
-	public UserAuthenticationResponse getUser() {
+	public PrincipalUser getUser() {
 		return user;
 	}
 
-	public MobileLoginResponse setUser(UserAuthenticationResponse user) {
+	public MobileLoginResponse setUser(PrincipalUser user) {
 		this.user = user;
 		return this;
 	}

@@ -1,6 +1,6 @@
 package ro.hoptrop.service;
 
-import ro.hoptrop.security.mobile.UserAuthenticationResponse;
+import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.web.MobileLoginResponse;
 
 public interface AuthenticationService {
@@ -9,6 +9,6 @@ public interface AuthenticationService {
 	
 	void mobileLogout(String token);
 	
-	UserAuthenticationResponse authenticateByToken(String token);
+	PrincipalUser authenticateByToken(String token);
 	
 }

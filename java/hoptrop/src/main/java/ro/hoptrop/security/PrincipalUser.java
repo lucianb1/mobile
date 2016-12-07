@@ -13,4 +13,25 @@ public class PrincipalUser extends User {
 		super(username, password, authorities);
 	}
 
+	private String name;
+	private String phone;
+
+	public String getName() {
+		return name;
+	}
+
+	public PrincipalUser setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public PrincipalUser setPhone(String phone) {
+		this.phone = phone;
+		return this;
+	}
+
 }
