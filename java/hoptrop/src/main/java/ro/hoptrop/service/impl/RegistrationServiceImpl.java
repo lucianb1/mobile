@@ -1,6 +1,7 @@
 package ro.hoptrop.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 	@Autowired
 	private AuthenticationService authenticationService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public MobileLoginResponse registerAccount(String email, String password, String name, String phone) {
@@ -28,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 			accountRepository.findAccount(email);
 			throw new AlreadyExistsException("Email already used");
 		} catch (NotFoundException e) { // the email is not used yet
-			Account account = accountRepository.createAccount(email, password, name, phone, AccountType.USER);
+			Account account = accountRepository.createAccount(email, passwordEncoder.encode(password), name, phone, AccountType.USER);
 			return authenticationService.loginAccount(account);
 		}
 	}

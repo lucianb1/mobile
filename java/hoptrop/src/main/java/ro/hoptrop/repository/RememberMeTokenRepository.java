@@ -52,7 +52,7 @@ public class RememberMeTokenRepository {
 	
 	public boolean tokenExists(String token) {
 		String sql = "SELECT count(id) FROM remember_me_tokens WHERE token = :token";
-		Long count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+		Long count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource().addValue("token", token), Long.class);
 		return count > 0;
 	}
 	

@@ -72,16 +72,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	@Override
 	public MobileLoginResponse loginAccount(Account account) {
-		String token = TokenUtils.generateToken();
-		while (tokenRepository.tokenExists(token)) {
-			token = TokenUtils.generateToken();
-		}
-		tokenRepository.createToken(account.getId(), token);
+		String token = createTokenForAccount(account.getId());
 		return mapToLoginResponse(account, token);
 	}
 	
 	public String createTokenForAccount(int accountID) {
 		String token = TokenUtils.generateToken();
+		while (tokenRepository.tokenExists(token)) {
+			token = TokenUtils.generateToken();
+		}
 		tokenRepository.createToken(accountID, token);
 		return token;
 	}
