@@ -139,6 +139,7 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
         @Override
         public void onClick(View v) {
             mShowEmailButton.setVisibility(View.GONE);
+            mEmailLoginLayout.setVisibility(View.VISIBLE);
             mEmailLoginLayout.animate().alpha(1).setDuration(500);
         }
     };
