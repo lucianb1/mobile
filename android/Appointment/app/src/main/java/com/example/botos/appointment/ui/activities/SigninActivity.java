@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -16,8 +17,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.botos.appointment.R;
-import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.utils.StringUtils;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+
+import java.util.Arrays;
 
 public class SigninActivity extends EmailAutocompleteBaseActivity {
 
@@ -28,10 +37,44 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
     private Button mEmailButton;
     private Button mShowEmailButton;
     private ProgressBar mLoginProgressBar;
+    private CallbackManager mCallbackManager;
+    private ProfileTracker mProfileTracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                if(Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                            // profile2 is the new profile
+                            Log.v("facebook - profile", profile2.getFirstName());
+                            mProfileTracker.stopTracking();
+                        }
+                    };
+                    // no need to call startTracking() on mProfileTracker
+                    // because it is called by its constructor, internally.
+                }
+                if (loginResult.getAccessToken() != null && Profile.getCurrentProfile() != null) {
+                    Profile.getCurrentProfile().getName();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                LoginManager.getInstance().logOut();
+                Log.d("onCancel", "");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("onError", error.getLocalizedMessage());
+            }
+        });
 
         findId();
         load();
@@ -55,6 +98,12 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+        mFacebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(SigninActivity.this, Arrays.asList("public_profile", "email", "user_birthday", "user_location", "user_friends"));
             }
         });
     }
@@ -143,4 +192,10 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
             mEmailLoginLayout.animate().alpha(1).setDuration(500);
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }

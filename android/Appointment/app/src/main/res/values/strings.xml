@@ -4,6 +4,7 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_signin">SigninActivity</string>
+    <string name="facebook_app_id">1150054408414271</string>
 
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="error_invalid_email">This email address is invalid</string>

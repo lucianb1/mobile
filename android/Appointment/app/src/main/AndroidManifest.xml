@@ -10,9 +10,12 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:name=".platform.Appointment"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+                   android:value="@string/facebook_app_id"/>
         <activity
             android:name=".ui.activities.MainActivity"
             android:label="@string/app_name"
@@ -29,6 +32,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        //Facebook Like or Share
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"/>
+        <!--//Facebook Send Images or Videos-->
+        <!--<provider-->
+            <!--android:name="com.facebook.FacebookContentProvider"-->
+            <!--android:authorities="com.facebook.app.FacebookContentProvider757632551026237"-->
+            <!--android:exported="true" />-->
         <activity
             android:name=".ui.BaseActivity"
             android:label="@string/title_activity_base"
