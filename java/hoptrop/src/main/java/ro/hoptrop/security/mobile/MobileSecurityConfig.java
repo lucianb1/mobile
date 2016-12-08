@@ -45,7 +45,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 	     web.ignoring()
-	        .antMatchers("/mobile/login");
+	        .antMatchers("/mobile/login**", "/mobile/forgotpassword", "/mobile/register");
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 		 http
 		 	.antMatcher("/mobile/**")
 		 	.authorizeRequests()
-		 		.antMatchers("/mobile/**").authenticated()
+		 		.anyRequest().authenticated()
 		 		.and()
 		 	.addFilterBefore(getAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 		 	.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

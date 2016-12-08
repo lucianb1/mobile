@@ -8,30 +8,29 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ro.hoptrop.core.exceptions.NotFoundException;
-import ro.hoptrop.core.rowmapper.RememberMeTokenRowMapper;
-import ro.hoptrop.model.token.RememberMeToken;
+import ro.hoptrop.core.rowmapper.FacebookTokenRowMapper;
+import ro.hoptrop.model.token.facebook.FacebookToken;
 
 @Repository
-public class RememberMeTokenRepository {
+public class FacebookTokenRepository {
 
-	private final RememberMeTokenRowMapper rowMapper = new RememberMeTokenRowMapper();
+	private final FacebookTokenRowMapper rowMapper = new FacebookTokenRowMapper();
 	
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
-	
 	public void createToken(int accountID, String token) {
-		String sql = "INSERT INTO remember_me_tokens (account_id, token) values (:accountID, :token)";
+		String sql = "INSERT INTO facebook_tokens (account_id, token) values (:accountID, :token)";
 		MapSqlParameterSource params = new MapSqlParameterSource()
 				.addValue("accountID", accountID)
 				.addValue("token", token);
 		jdbcTemplate.update(sql, params);
 	}
 	
-	public RememberMeToken findToken(String token) {
-		String sql = "SELECT * FROM remember_me_tokens WHERE token = :token";
+	public FacebookToken findToken(String token) {
+		String sql = "SELECT * FROM facebook_tokens WHERE token = :token";
 		MapSqlParameterSource params = new MapSqlParameterSource().addValue("token", token);
-		List<RememberMeToken> resultList = jdbcTemplate.query(sql, params, rowMapper);
+		List<FacebookToken> resultList = jdbcTemplate.query(sql, params, rowMapper);
 		if (resultList.isEmpty()) {
 			throw new NotFoundException();
 		}
@@ -39,21 +38,15 @@ public class RememberMeTokenRepository {
 	}
 	
 	public void deleteToken(int id) {
-		String sql = "DELETE FROM remember_me_tokens WHERE id = :id";
+		String sql = "DELETE FROM facebook_tokens WHERE id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
 		jdbcTemplate.update(sql, params);
 	}
 	
 	public void deleteToken(String token) {
-		String sql = "DELETE FROM remember_me_tokens WHERE token = :token";
+		String sql = "DELETE FROM facebook_tokens WHERE token = :token";
 		MapSqlParameterSource params = new MapSqlParameterSource().addValue("token", token);
 		jdbcTemplate.update(sql, params);
-	}
-	
-	public boolean tokenExists(String token) {
-		String sql = "SELECT count(id) FROM remember_me_tokens WHERE token = :token";
-		Long count = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
-		return count > 0;
 	}
 	
 }

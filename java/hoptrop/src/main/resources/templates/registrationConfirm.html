@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+    <div style="background-color: #EEEEEE; padding-bottom: 30px;">
+        <table style="width: 450px; margin: auto; border-collapse: collapse; border-spacing: 0; border: 0;">
+            <tr>
+                <td style="padding-top: 10px; position: relative; width: 100%"><img
+                    style="max-height: 50px; width: auto; padding: 0 3px 5px" alt="SimpluSiRapid.ro"
+                    th:src="@{__${baseUrl}__/resources/images/logo/logo.png}" /></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; background-color: #ff6600; color: white;"><span
+                    style="font-size: 24px; padding: 10px 5px; display: inline-block"> Bine ai venit pe SimpluSiRapid.ro</span></td>
+            </tr>
+            <tr>
+              <td style="line-height:20px;padding: 25px 20px 30px;font-size: 16px; text-align: center; background-color: white; color: grey;">
+                  <br/>
+                  <span
+                    style=""> Pentru a activa noul cont apasa
+                        butonul de mai jos. </span></td>
+            </tr>
+            <tr style="width: 500px; background-color: white;">
+              <td style="text-align: center; padding-bottom: 30px"><a
+                    th:href="@{'__${baseUrl}__' + '#' + '/confirm/registration?token=__${token}__'}" target="_blank" rel="nofollow"> <span
+                        style="background-color: #00bf00; display: inline-block; font-size: 18px; padding: 10px 30px 10px; color: white">Activeaza
+                            cont </span>
+                </a></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; background-color: white; color: grey;"><span
+                    style="font-size: 12px; padding: 5px 5px 15px; display: inline-block"> Daca nu ai creat un cont pe
+                        SimpluSiRapid.ro te rugam sa ignori acest mail </span></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;; color: grey; background-color: #EEEEEE"><span
+                    style="font-size: 12px; padding: 25px 5px 0px; display: inline-block"> Daca butoanele si linkurile nu
+                        functioneaza, marcheaza acest mail, selecteaza-l ca fiind Not Spam si acceseaza-l in Inbox. </span></td>
+            </tr>
+            <tr>
+                <td rowspan="4" style="text-align: center; color: grey; background-color: #EEEEEE;"><span
+                    style="font-size: 12px; padding: 0px 5px 0px; display: inline-block"> Pentru a accesa pagina web click <a
+                        style="color: #1d66e5" th:href="@{__${baseUrl}__}">aici</a>
+                </span> <span style="font-size: 12px; padding: 0px 10px 35px; display: inline-block"> Acest mesaj este generat
+                        automat. Te rugam sa nu dai reply. </span></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

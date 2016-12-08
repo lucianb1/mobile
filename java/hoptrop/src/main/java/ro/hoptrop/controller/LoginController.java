@@ -9,10 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ro.hoptrop.security.mobile.TokenAuthentication;
 import ro.hoptrop.service.AuthenticationService;
+import ro.hoptrop.service.RegistrationService;
 import ro.hoptrop.web.LoginRequest;
 import ro.hoptrop.web.MobileLoginResponse;
 
@@ -23,6 +25,9 @@ public class LoginController {
 	
 	@Autowired
 	private AuthenticationService authenticationService;
+	
+	@Autowired
+	private RegistrationService registrationService;
 	
 	@RequestMapping(value="/ping", method = RequestMethod.GET)
 	public Object ping(TokenAuthentication authentication) {
@@ -38,6 +43,11 @@ public class LoginController {
 	public void logout(HttpServletRequest request, TokenAuthentication authentication) {
 		SecurityContextHolder.clearContext();
 		authenticationService.mobileLogout(authentication.getToken());
+	}
+	
+	@RequestMapping(value = "/login/facebook", method = RequestMethod.POST)
+	public MobileLoginResponse loginWithFacebook(@RequestParam String token) {
+		return registrationService.registerFacebookAccount(token);
 	}
 	
 }

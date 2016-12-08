@@ -27,8 +27,6 @@ import ro.hoptrop.service.AuthenticationService;
 
 public class TokenAuthenticationFilter extends GenericFilterBean {
 
-	private static final String EMPTY_PASSWORD = "";
-
 	private static final Logger LOG = Logger.getLogger(TokenAuthenticationFilter.class);
 
 	private AuthenticationManager authenticationManager;

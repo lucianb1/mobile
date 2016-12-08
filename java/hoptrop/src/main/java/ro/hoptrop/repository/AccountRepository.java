@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ro.hoptrop.core.exceptions.NotFoundException;
 import ro.hoptrop.core.rowmapper.AccountRowMapper;
 import ro.hoptrop.model.account.Account;
+import ro.hoptrop.model.account.AccountType;
 
 @Repository
 public class AccountRepository {
@@ -19,12 +22,21 @@ public class AccountRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
-	public void createAccount() {
-		
+	public Account createAccount(String email, String password, String name, String phone, AccountType type) {
+		String sql = "INSERT INTO accounts (email, password, name, phone, role) values (:email, :password, :name, :phone, :accountType)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("email", email)
+				.addValue("password", password)
+				.addValue("phone", phone)
+				.addValue("name", name)
+				.addValue("accountType", type.name());
+		jdbcTemplate.update(sql, params, keyHolder);
+		return this.findAccount(keyHolder.getKey().intValue());
 	}
 	
 	public Account findAccount(int id) {
-		String sql = "SELECT * from accounts where id = :id";
+		String sql = "SELECT * FROM accounts WHERE id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
 		List<Account> accounts = jdbcTemplate.query(sql, params, rowMapper);
 		if (accounts.isEmpty()) {
@@ -34,7 +46,7 @@ public class AccountRepository {
 	}
 	
 	public Account findAccount(String email) {
-		String sql = "SELECT * from accounts where email = :email";
+		String sql = "SELECT * FROM accounts WHERE email = :email";
 		MapSqlParameterSource params = new MapSqlParameterSource().addValue("email", email);
 		List<Account> accounts = jdbcTemplate.query(sql, params, rowMapper);
 		if (accounts.isEmpty()) {
@@ -43,8 +55,12 @@ public class AccountRepository {
 		return accounts.get(0);
 	}
 	
-	public void updateAccount() {
-		
+	public void updateAccountPassword(int accountID, String password) {
+		String sql = "UPDATE accounts set password = :password where id = :id";
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("password", password)
+				.addValue("id", accountID);
+		jdbcTemplate.update(sql, params);
 	}
 	
 }

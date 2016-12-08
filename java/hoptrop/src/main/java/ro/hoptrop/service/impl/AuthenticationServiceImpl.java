@@ -3,11 +3,13 @@ package ro.hoptrop.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import ro.hoptrop.core.exceptions.NotFoundException;
 import ro.hoptrop.core.exceptions.SecurityException;
@@ -23,6 +25,8 @@ import ro.hoptrop.web.MobileLoginResponse;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+	private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class);
+	
 	@Autowired
 	private RememberMeTokenRepository tokenRepository;
 	
@@ -54,6 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 		if (passwordEncoder.matches(password, account.getPassword())) {
 			String token = createTokenForAccount(account.getId());
+			LOG.info("Successfully login for user with email: " + email);
 			return mapToLoginResponse(account, token);
 		} else {
 			throw new SecurityException("Invalid email or password");
@@ -63,6 +68,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Override
 	public void mobileLogout(String token) {
 		tokenRepository.deleteToken(token);
+	}
+	
+	@Override
+	public MobileLoginResponse loginAccount(Account account) {
+		String token = TokenUtils.generateToken();
+		while (tokenRepository.tokenExists(token)) {
+			token = TokenUtils.generateToken();
+		}
+		tokenRepository.createToken(account.getId(), token);
+		return mapToLoginResponse(account, token);
 	}
 	
 	public String createTokenForAccount(int accountID) {
@@ -87,6 +102,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(role));
 		return authorities;
+	}
+
+	private String createFacebookLongLivedToken(String token, String appID, String secretID) {
+		RestTemplate restTemplate = new RestTemplate();
+		return null;
 	}
 
 }
