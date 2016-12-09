@@ -17,6 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.botos.appointment.R;
+import com.example.botos.appointment.models.UserModel;
+import com.example.botos.appointment.platform.AppointmentApiResponse;
+import com.example.botos.appointment.platform.Engine;
+import com.example.botos.appointment.ui.BaseActivity;
+import com.example.botos.appointment.utils.ApiLibrary;
+import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.StringUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -27,15 +33,18 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
-public class SigninActivity extends EmailAutocompleteBaseActivity {
+public class SigninActivity extends BaseActivity {
 
+    private static final String TAG = "SigninActivity";
     private Button mFacebookButton;
     private AutoCompleteTextView mEmailEdit;
     private EditText mPasswordEdit;
     private LinearLayout mEmailLoginLayout;
     private Button mEmailButton;
     private Button mShowEmailButton;
+    private Button mRegisterButton;
     private ProgressBar mLoginProgressBar;
     private CallbackManager mCallbackManager;
     private ProfileTracker mProfileTracker;
@@ -44,38 +53,7 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
         mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                if(Profile.getCurrentProfile() == null) {
-                    mProfileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                            // profile2 is the new profile
-                            Log.v("facebook - profile", profile2.getFirstName());
-                            mProfileTracker.stopTracking();
-                        }
-                    };
-                    // no need to call startTracking() on mProfileTracker
-                    // because it is called by its constructor, internally.
-                }
-                if (loginResult.getAccessToken() != null && Profile.getCurrentProfile() != null) {
-                    Profile.getCurrentProfile().getName();
-                }
-            }
-
-            @Override
-            public void onCancel() {
-                LoginManager.getInstance().logOut();
-                Log.d("onCancel", "");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d("onError", error.getLocalizedMessage());
-            }
-        });
-
+        facebookCallBack();
         findId();
         load();
     }
@@ -87,13 +65,13 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
         mEmailLoginLayout = (LinearLayout) findViewById(R.id.signinEmailLayout);
         mEmailButton = (Button)findViewById(R.id.signinEmailButton);
         mShowEmailButton = (Button)findViewById(R.id.signinShowEmailButton);
+        mRegisterButton = (Button)findViewById(R.id.signinRegisterButton);
         mLoginProgressBar = (ProgressBar) findViewById(R.id.login_progress);
     }
 
     private void load() {
         mEmailLoginLayout.setAlpha(0);
         mShowEmailButton.setOnClickListener(ShowEmailLogin);
-
         mEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,15 +84,25 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
                 LoginManager.getInstance().logInWithReadPermissions(SigninActivity.this, Arrays.asList("public_profile", "email", "user_birthday", "user_location", "user_friends"));
             }
         });
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent register = new Intent(SigninActivity.this, RegisterActivity.class);
+                startActivity(register);
+                mShowEmailButton.setVisibility(View.VISIBLE);
+                mEmailLoginLayout.setVisibility(View.GONE);
+                mEmailLoginLayout.setAlpha(0);
+            }
+        });
     }
     private void attemptLogin() {
         showProgress(true);
         // Reset errors.
-        emailView.setError(null);
+        mEmailEdit.setError(null);
         mPasswordEdit.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = emailView.getText().toString();
+        String email = mEmailEdit.getText().toString();
         String password = mPasswordEdit.getText().toString();
 
         boolean cancel = false;
@@ -129,12 +117,12 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            emailView.setError(getString(R.string.error_field_required));
-            focusView = emailView;
+            mEmailEdit.setError(getString(R.string.error_field_required));
+            focusView = mEmailEdit;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            emailView.setError(getString(R.string.error_invalid_email));
-            focusView = emailView;
+            mEmailEdit.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailEdit;
             cancel = true;
         }
 
@@ -145,8 +133,7 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
             showProgress(false);
         } else {
             Toast.makeText(SigninActivity.this, "Request start", Toast.LENGTH_SHORT).show();
-            //request
-            showProgress(false);
+            loginRequest();
         }
     }
 
@@ -184,6 +171,41 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
         }
     }
 
+    private void facebookCallBack() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                if(Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                            // profile2 is the new profile
+                            Log.v("facebook - profile", profile2.getFirstName());
+                            mProfileTracker.stopTracking();
+                        }
+                    };
+                    // no need to call startTracking() on mProfileTracker
+                    // because it is called by its constructor, internally.
+                }
+                if (loginResult.getAccessToken() != null && Profile.getCurrentProfile() != null) {
+                    Profile.getCurrentProfile().getName();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                LoginManager.getInstance().logOut();
+                Log.d("onCancel", "");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("onError", error.getLocalizedMessage());
+            }
+        });
+
+    }
+
     View.OnClickListener ShowEmailLogin = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -192,6 +214,32 @@ public class SigninActivity extends EmailAutocompleteBaseActivity {
             mEmailLoginLayout.animate().alpha(1).setDuration(500);
         }
     };
+
+    private void loginRequest() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("email", mEmailEdit.getText().toString());
+        params.put("password", mPasswordEdit.getText().toString());
+        ApiLibrary.postParamRequest(Constants.BASE_URL + Constants.LOGIN, params, new AppointmentApiResponse<UserModel>() {
+            @Override
+            public void onSuccess(UserModel response) {
+                Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
+                Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
+                Engine.getInstance().userModel = response;
+                showProgress(false);
+            }
+
+            @Override
+            public void onFailure() {
+                showProgress(false);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
+                showProgress(false);
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

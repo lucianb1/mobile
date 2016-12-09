@@ -10,4 +10,19 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="field">Fild</string>
+    <string name="is_mandatory">is mandatory!</string>
+    <string name="password_not_match">Password doesnt match!</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register_text">Register</string>
+    <string name="show_email_login_text">Login with Email</string>
+    <string name="email_login_text">Email Login</string>
+    <string name="facebook_login_text">Facebook Login</string>
+    <string name="success_request">Success</string>
+
 </resources>

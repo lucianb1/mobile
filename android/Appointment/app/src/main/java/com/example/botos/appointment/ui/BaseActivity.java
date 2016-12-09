@@ -13,9 +13,18 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
+//        setContentView(R.layout.activity_base);
+
         findId();
         load();
+    }
+
+    public void setToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            this.mToolBar = toolbar;
+        }
     }
 
     private void findId() {

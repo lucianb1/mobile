@@ -20,7 +20,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:text="Facebook Login"
+            android:text="@string/facebook_login_text"
             android:layout_width="match_parent"
             android:layout_height="50dp" />
 
@@ -46,10 +46,11 @@
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
+                        android:padding="10dp"
                         android:id="@+id/signinEmailEdit"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Email"
+                        android:hint="@string/email"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:textSize="16sp"
@@ -64,10 +65,11 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:padding="10dp"
                         android:id="@+id/signinPasswordEdit"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:textSize="16sp"
@@ -85,7 +87,7 @@
 
                     <Button
                         android:id="@+id/signinEmailButton"
-                        android:text="Email Login"
+                        android:text="@string/email_login_text"
                         android:layout_width="match_parent"
                         android:layout_height="50dp" />
 
@@ -103,22 +105,25 @@
             <Button
                 android:id="@+id/signinShowEmailButton"
                 android:layout_centerInParent="true"
-                android:text="Login with Email"
+                android:text="@string/show_email_login_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />
 
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/signinRegisterButton"
-            android:text="Register"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
-
     </LinearLayout>
+
+    <Button
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/signinRegisterButton"
+        android:text="@string/register_text"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
 
 </RelativeLayout>
