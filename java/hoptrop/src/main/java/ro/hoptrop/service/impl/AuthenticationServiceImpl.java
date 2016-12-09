@@ -103,9 +103,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return authorities;
 	}
 
-	private String createFacebookLongLivedToken(String token, String appID, String secretID) {
-		RestTemplate restTemplate = new RestTemplate();
-		return null;
-	}
-
 }
