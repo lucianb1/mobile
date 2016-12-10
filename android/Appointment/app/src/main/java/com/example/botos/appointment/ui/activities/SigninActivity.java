@@ -3,6 +3,7 @@ package com.example.botos.appointment.ui.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
+import com.example.botos.appointment.utils.DialogUtils;
 import com.example.botos.appointment.utils.StringUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -175,20 +177,23 @@ public class SigninActivity extends BaseActivity {
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                if(Profile.getCurrentProfile() == null) {
-                    mProfileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                            // profile2 is the new profile
-                            Log.v("facebook - profile", profile2.getFirstName());
-                            mProfileTracker.stopTracking();
-                        }
-                    };
-                    // no need to call startTracking() on mProfileTracker
-                    // because it is called by its constructor, internally.
-                }
-                if (loginResult.getAccessToken() != null && Profile.getCurrentProfile() != null) {
-                    Profile.getCurrentProfile().getName();
+//                if(Profile.getCurrentProfile() == null) {
+//                    mProfileTracker = new ProfileTracker() {
+//                        @Override
+//                        protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+//                            // profile2 is the new profile
+//                            Log.v("facebook - profile", profile2.getFirstName());
+//                            mProfileTracker.stopTracking();
+//                        }
+//                    };
+//                    // no need to call startTracking() on mProfileTracker
+//                    // because it is called by its constructor, internally.
+//                }
+//                if (loginResult.getAccessToken() != null && Profile.getCurrentProfile() != null) {
+//                    Profile.getCurrentProfile().getName();
+//                }
+                if (loginResult.getAccessToken() != null) {
+                    serverFacebookLogin(loginResult.getAccessToken().getToken());
                 }
             }
 
@@ -201,6 +206,7 @@ public class SigninActivity extends BaseActivity {
             @Override
             public void onError(FacebookException error) {
                 Log.d("onError", error.getLocalizedMessage());
+                LoginManager.getInstance().logOut();
             }
         });
 
@@ -237,6 +243,37 @@ public class SigninActivity extends BaseActivity {
             public void onFailure(String error) {
                 Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
                 showProgress(false);
+            }
+        });
+    }
+
+    private void serverFacebookLogin(String token) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("token", token);
+        Toast.makeText(SigninActivity.this, token, Toast.LENGTH_SHORT).show();
+        final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(SigninActivity.this, false, null, getResources().getString(R.string.loading));
+        progreeDialog.show();
+        ApiLibrary.postParamRequest(Constants.BASE_URL + Constants.FACEBOOK_LOGIN, params, new AppointmentApiResponse<UserModel>() {
+            @Override
+            public void onSuccess(UserModel response) {
+                Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
+                Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
+                Engine.getInstance().userModel = response;
+                if (progreeDialog.isShowing())
+                    progreeDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure() {
+                if (progreeDialog.isShowing())
+                    progreeDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
+                if (progreeDialog.isShowing())
+                    progreeDialog.dismiss();
             }
         });
     }
