@@ -25,4 +25,4 @@ spring:
       
 facebook:
   appID: 1150054408414271
-  secretID: 7a8affaa11a316777a3d0243cfba25d9
+  appSecret: 7a8affaa11a316777a3d0243cfba25d9

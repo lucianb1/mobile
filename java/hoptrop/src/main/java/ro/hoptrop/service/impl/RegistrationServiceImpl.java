@@ -2,24 +2,24 @@ package ro.hoptrop.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.social.facebook.api.User;
-import org.springframework.social.facebook.api.UserOperations;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import ro.hoptrop.core.exceptions.AlreadyExistsException;
 import ro.hoptrop.core.exceptions.NotFoundException;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
+import ro.hoptrop.model.facebook.FacebookUser;
 import ro.hoptrop.repository.AccountRepository;
 import ro.hoptrop.service.AuthenticationService;
 import ro.hoptrop.service.RegistrationService;
 import ro.hoptrop.utils.FacebookUtils;
+import ro.hoptrop.utils.TokenUtils;
 import ro.hoptrop.web.MobileLoginResponse;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
+
+	private static final String NO = "NO";
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -47,14 +47,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 	@Override
 	public MobileLoginResponse registerFacebookAccount(String token) {
 		String longToken = facebookUtils.createFacebookLongLivedToken(token);
-//		FacebookTemplate facebook = new FacebookTemplate(longToken);
-//		UserOperations userOperations = facebook.userOperations();
-//		User userProfile = userOperations.getUserProfile();
-//		String email = userProfile.getEmail();
-//		String name = userProfile.getName();
-//		//TODO phone
-//		return authenticationService.loginAccount(null);
-		return null;
+		FacebookTemplate facebook = new FacebookTemplate(longToken);
+		String [] fields = {"email",  "name" };
+		FacebookUser loadedUser = facebook.fetchObject("me", FacebookUser.class, fields);
+		String email = loadedUser.getEmail();
+		String name = loadedUser.getName();
+		Account account = accountRepository.createAccount(email, passwordEncoder.encode(TokenUtils.generateToken()), name, NO, AccountType.USER);
+		return authenticationService.loginAccount(account);
 	}
 
 	

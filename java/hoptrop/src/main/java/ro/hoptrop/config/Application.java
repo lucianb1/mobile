@@ -17,31 +17,31 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 @EnableWebMvc
 @EnableAutoConfiguration
-@ComponentScan(basePackages = { "ro.hoptrop" })
+@ComponentScan(basePackages = {"ro.hoptrop"})
 @EnableConfigurationProperties
 @EnableAsync
 public class Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
-	@Bean
-	public PasswordEncoder getPasswordEncoderBean() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	@Bean(name = "asyncExecutor")
-	public TaskExecutor getAsyncTaskExecutor() {
-		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-	      taskExecutor.setMaxPoolSize(10);
-	      taskExecutor.setCorePoolSize(5);
-	      taskExecutor.setThreadNamePrefix("mailSenderExecutor-");
-	      return taskExecutor;
-	}
+    @Bean
+    public PasswordEncoder getPasswordEncoderBean() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public RestTemplate restTemplateBean() {
-		return new RestTemplate();
-	}
+    @Bean(name = "asyncExecutor")
+    public TaskExecutor getAsyncTaskExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setMaxPoolSize(10);
+        taskExecutor.setCorePoolSize(5);
+        taskExecutor.setThreadNamePrefix("mailSenderExecutor-");
+        return taskExecutor;
+    }
+
+    @Bean
+    public RestTemplate restTemplateBean() {
+        return new RestTemplate();
+    }
 }

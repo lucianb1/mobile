@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ro.hoptrop.security.mobile.TokenAuthentication;
 import ro.hoptrop.service.AuthenticationService;
 import ro.hoptrop.service.RegistrationService;
+import ro.hoptrop.web.FacebookLoginRequest;
 import ro.hoptrop.web.LoginRequest;
 import ro.hoptrop.web.MobileLoginResponse;
 
@@ -46,8 +47,8 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "/login/facebook", method = RequestMethod.POST)
-	public MobileLoginResponse loginWithFacebook(@RequestParam String token) {
-		return registrationService.registerFacebookAccount(token);
+	public MobileLoginResponse loginWithFacebook(@Valid @RequestBody FacebookLoginRequest request) {
+		return registrationService.registerFacebookAccount(request.getToken());
 	}
 	
 }
