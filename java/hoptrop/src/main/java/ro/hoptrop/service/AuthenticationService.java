@@ -2,7 +2,7 @@ package ro.hoptrop.service;
 
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.security.PrincipalUser;
-import ro.hoptrop.web.MobileLoginResponse;
+import ro.hoptrop.web.response.MobileLoginResponse;
 
 public interface AuthenticationService {
 
@@ -13,5 +13,6 @@ public interface AuthenticationService {
 	PrincipalUser authenticateByToken(String token);
 	
 	MobileLoginResponse loginAccount(Account account);
-	
+
+    MobileLoginResponse loginWithFacebook(String token);
 }

@@ -5,25 +5,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
 import ro.hoptrop.core.exceptions.NotFoundException;
 import ro.hoptrop.core.exceptions.SecurityException;
 import ro.hoptrop.model.account.Account;
+import ro.hoptrop.model.account.AccountType;
+import ro.hoptrop.model.facebook.FacebookUser;
 import ro.hoptrop.model.token.RememberMeToken;
 import ro.hoptrop.repository.AccountRepository;
 import ro.hoptrop.repository.RememberMeTokenRepository;
 import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.AuthenticationService;
+import ro.hoptrop.utils.FacebookUtils;
 import ro.hoptrop.utils.TokenUtils;
-import ro.hoptrop.web.MobileLoginResponse;
+import ro.hoptrop.web.response.MobileLoginResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-
     private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class);
+    private static final String NO = "NO";
 
     @Autowired
     private RememberMeTokenRepository tokenRepository;
@@ -33,6 +37,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private FacebookUtils facebookUtils;
 
     @Override
     public PrincipalUser authenticateByToken(String token) {
@@ -72,6 +79,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public MobileLoginResponse loginAccount(Account account) {
         String token = createTokenForAccount(account.getId());
         return mapToLoginResponse(account, token);
+    }
+
+    @Override
+    public MobileLoginResponse loginWithFacebook(String token) {
+        String longToken = facebookUtils.createFacebookLongLivedToken(token);
+        FacebookTemplate facebook = new FacebookTemplate(longToken);
+        String [] fields = {"email",  "name" };
+        FacebookUser loadedUser = facebook.fetchObject("me", FacebookUser.class, fields);
+        String email = loadedUser.getEmail();
+        String name = loadedUser.getName();
+        Account account = accountRepository.createAccount(email, passwordEncoder.encode(TokenUtils.generateToken()), name, NO, AccountType.USER);
+        return this.loginAccount(account);
     }
 
     public String createTokenForAccount(int accountID) {

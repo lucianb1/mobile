@@ -1,4 +1,4 @@
-package ro.hoptrop.web;
+package ro.hoptrop.web.response;
 
 import ro.hoptrop.security.PrincipalUser;
 

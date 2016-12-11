@@ -23,7 +23,6 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     @Autowired
     private MailService mailService;
 
-
     @Override
     public void resetPassword(String email) {
         Account account = accountRepository.findAccount(email);

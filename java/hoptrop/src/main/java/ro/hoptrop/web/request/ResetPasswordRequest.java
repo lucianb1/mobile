@@ -1,4 +1,4 @@
-package ro.hoptrop.web;
+package ro.hoptrop.web.request;
 
 import org.hibernate.validator.constraints.Email;
 

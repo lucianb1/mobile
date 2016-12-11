@@ -1,23 +1,21 @@
 package ro.hoptrop.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import ro.hoptrop.security.mobile.TokenAuthentication;
+import ro.hoptrop.service.AccountService;
 import ro.hoptrop.service.AuthenticationService;
-import ro.hoptrop.service.RegistrationService;
-import ro.hoptrop.web.FacebookLoginRequest;
-import ro.hoptrop.web.LoginRequest;
-import ro.hoptrop.web.MobileLoginResponse;
+import ro.hoptrop.web.request.FacebookLoginRequest;
+import ro.hoptrop.web.request.LoginRequest;
+import ro.hoptrop.web.response.MobileLoginResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/mobile")
@@ -28,7 +26,7 @@ public class LoginController {
 	private AuthenticationService authenticationService;
 	
 	@Autowired
-	private RegistrationService registrationService;
+	private AccountService accountService;
 	
 	@RequestMapping(value="/ping", method = RequestMethod.GET)
 	public Object ping(TokenAuthentication authentication) {
@@ -48,7 +46,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login/facebook", method = RequestMethod.POST)
 	public MobileLoginResponse loginWithFacebook(@Valid @RequestBody FacebookLoginRequest request) {
-		return registrationService.registerFacebookAccount(request.getToken());
+		return authenticationService.loginWithFacebook(request.getToken());
 	}
 	
 }

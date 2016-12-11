@@ -1,18 +1,17 @@
 package ro.hoptrop.repository;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import ro.hoptrop.core.exceptions.NotFoundException;
 import ro.hoptrop.core.rowmapper.AccountRowMapper;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
+
+import java.util.List;
 
 @Repository
 public class AccountRepository {
@@ -54,9 +53,21 @@ public class AccountRepository {
 		}
 		return accounts.get(0);
 	}
+
+	public void updateAccountDetails(int id, String newName, String newPhone) {
+	    if (newName == null || newPhone == null) {
+	        throw new IllegalArgumentException("Null argument");
+	    }
+	    String sql = "UPDATE accounts SET name = :newName, phone = :newPhone where id = :id";
+	    MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("newName", newName)
+                .addValue("newPhone", newPhone);
+	    jdbcTemplate.update(sql, params);
+    }
 	
 	public void updateAccountPassword(int accountID, String password) {
-		String sql = "UPDATE accounts set password = :password where id = :id";
+		String sql = "UPDATE accounts SET password = :password where id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource()
 				.addValue("password", password)
 				.addValue("id", accountID);
