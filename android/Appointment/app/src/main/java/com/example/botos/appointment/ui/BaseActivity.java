@@ -1,6 +1,7 @@
 package com.example.botos.appointment.ui;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,6 +25,8 @@ public class BaseActivity extends AppCompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             this.mToolBar = toolbar;
+            mToolBar.setTitleTextColor(ContextCompat.getColor(BaseActivity.this, R.color.white_alpha));
+            mToolBar.setSubtitleTextColor(ContextCompat.getColor(BaseActivity.this, R.color.white_alpha));
         }
     }
 

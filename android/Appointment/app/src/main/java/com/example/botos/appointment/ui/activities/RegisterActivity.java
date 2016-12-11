@@ -30,7 +30,6 @@ public class RegisterActivity extends BaseActivity {
     private TextInputLayout mNameInputLayout;
     private TextInputLayout mNumberInputLayout;
     private TextInputLayout mPasswordInputLayout;
-    private TextInputLayout mConfirmPassInputLayout;
     private Button mRegisterButton;
 
     @Override
@@ -51,7 +50,6 @@ public class RegisterActivity extends BaseActivity {
         mNameInputLayout = (TextInputLayout) findViewById(R.id.registerNameInput);
         mNumberInputLayout = (TextInputLayout) findViewById(R.id.registerNumberInput);
         mPasswordInputLayout = (TextInputLayout) findViewById(R.id.registerPasswordInput);
-        mConfirmPassInputLayout = (TextInputLayout) findViewById(R.id.registerConfirmPassInput);
         mRegisterButton = (Button) findViewById(R.id.registerButton);
     }
 
@@ -70,8 +68,7 @@ public class RegisterActivity extends BaseActivity {
         if (StringUtils.validateEditText(mEmailInputLayout, RegisterActivity.this) &&
                 StringUtils.validateEditText(mNameInputLayout, RegisterActivity.this) &&
                 StringUtils.validateEditText(mNumberInputLayout, RegisterActivity.this) &&
-                StringUtils.validateEditText(mPasswordInputLayout, RegisterActivity.this) &&
-                StringUtils.validateEditText(mConfirmPassInputLayout, RegisterActivity.this)) {
+                StringUtils.validateEditText(mPasswordInputLayout, RegisterActivity.this)) {
             if (!StringUtils.isValidEmail(mEmailInputLayout.getEditText().getText().toString())) {
                 mEmailInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_email));
                 mEmailInputLayout.requestFocus();
@@ -88,11 +85,6 @@ public class RegisterActivity extends BaseActivity {
             if (mPasswordInputLayout.getEditText().getText().length() < 6) {
                 mPasswordInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password));
                 mPasswordInputLayout.requestFocus();
-                return false;
-            }
-            if (!mPasswordInputLayout.getEditText().getText().toString().equals(mConfirmPassInputLayout.getEditText().getText().toString())) {
-                mConfirmPassInputLayout.getEditText().setError(getString(R.string.password_not_match));
-                mConfirmPassInputLayout.requestFocus();
                 return false;
             }
         }

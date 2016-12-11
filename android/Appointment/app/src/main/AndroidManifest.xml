@@ -61,6 +61,10 @@
         <activity
             android:name=".ui.activities.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.RegisterFinalStepActivity"
+            android:label="@string/title_activity_register_final_step"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

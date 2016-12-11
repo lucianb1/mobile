@@ -253,11 +253,16 @@ public class SigninActivity extends BaseActivity {
         ApiLibrary.postRequestUserModel(Constants.BASE_URL + Constants.FACEBOOK_LOGIN, params, null, new AppointmentApiResponse<UserModel>() {
             @Override
             public void onSuccess(UserModel response) {
-                Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
                 Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
                 Engine.getInstance().userModel = response;
                 if (progreeDialog.isShowing())
                     progreeDialog.dismiss();
+                if (response.getPhone().equals("NO")) {
+                    Intent finalStepRegister = new Intent(SigninActivity.this, RegisterFinalStepActivity.class);
+                    startActivity(finalStepRegister);
+                } else {
+
+                }
             }
 
             @Override
