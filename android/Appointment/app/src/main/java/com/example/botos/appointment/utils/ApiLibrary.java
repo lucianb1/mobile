@@ -25,7 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class ApiLibrary {
 
-    public static void postParamRequest(final String requestURL, final HashMap<String, String> params, final AppointmentApiResponse<UserModel> responseApi) {
+    public static void postRequestUserModel(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<UserModel> responseApi) {
         DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
             @Override
             public void run() {
@@ -40,7 +40,10 @@ public class ApiLibrary {
 //                    conn.setDoInput(true);
 //                    conn.setDoOutput(true);
 
-                    setParams(conn, params);
+                    if (header != null)
+                        setHeaders(conn, header);
+                    if (params != null)
+                        setParams(conn, params);
 
                     int responseCode=conn.getResponseCode();
 
@@ -147,6 +150,100 @@ public class ApiLibrary {
             }
         }
         return sb.toString();
+    }
+
+    public static void postRequestString(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<String> responseApi) {
+        DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    url = new URL(requestURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setReadTimeout(15000);
+                    conn.setConnectTimeout(15000);
+                    conn.setRequestMethod("POST");
+//                    conn.setDoInput(true);
+//                    conn.setDoOutput(true);
+
+                    if (header != null)
+                        setHeaders(conn, header);
+                    if (params != null)
+                        setParams(conn, params);
+
+                    int responseCode=conn.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        onStringSuccessBlock(conn, responseApi);
+                    }
+                    else {
+                        onStringFailureBlock(conn, responseApi);
+                    }
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseApi != null)
+                                responseApi.onFailure(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private static void onStringSuccessBlock(final HttpURLConnection conn, final AppointmentApiResponse<String> responseApi) {
+        String response = "";
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = br.readLine()) != null) {
+                response += line;
+            }
+
+        } catch (Exception e) {
+            Log.d("error: ", e.getMessage());
+        }
+        try {
+            final JSONObject jsonObject = new JSONObject(response);
+            DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (responseApi != null)
+                        responseApi.onSuccess(jsonObject.toString());
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+            DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (responseApi != null)
+                        responseApi.onSuccess("Email Success");
+                }
+            });
+        }
+
+    }
+
+    private static void onStringFailureBlock(final HttpURLConnection conn, final AppointmentApiResponse<String> responseApi) {
+        String response = "";
+        InputStream stream = conn.getErrorStream();
+        if (stream != null) {
+            response = convertStreamToString(stream);
+        }
+        final String finalResponse = response;
+        DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (responseApi != null)
+                    responseApi.onFailure(finalResponse);
+            }
+        });
     }
 //
 //    private static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {

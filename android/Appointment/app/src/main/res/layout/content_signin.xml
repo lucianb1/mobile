@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/back_background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.botos.appointment.ui.activities.SigninActivity"
     tools:showIn="@layout/activity_signin">
@@ -14,34 +15,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
+
+        <RelativeLayout
+            android:background="@color/facebook_color"
             android:id="@+id/signinFacebookButton"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:text="@string/facebook_login_text"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="50dp">
 
-        <RelativeLayout
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/facebook_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="@string/facebook_login_text"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
 
             <LinearLayout
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
                 android:id="@+id/signinEmailLayout"
                 android:layout_marginTop="10dp"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputLayout
+                    android:textColorHint="@color/text_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -61,6 +77,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:textColorHint="@color/text_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -79,6 +96,14 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <TextView
+                    android:padding="10dp"
+                    android:id="@+id/signinForgotPasswordButton"
+                    android:text="@string/forgot_password_text"
+                    android:textSize="16sp"
+                    android:textColor="@color/white_alpha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -86,6 +111,8 @@
                     android:layout_marginTop="16dp">
 
                     <Button
+                        android:textColor="@color/white_alpha"
+                        android:background="@color/button_background"
                         android:id="@+id/signinEmailButton"
                         android:text="@string/email_login_text"
                         android:layout_width="match_parent"
@@ -100,30 +127,37 @@
                         android:visibility="gone"/>
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:id="@+id/signinRegisterButton"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/no_account"
+                        android:textColor="@color/white_alpha"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:textSize="16sp"
+                        android:textColor="@color/white_alpha"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/crete_new"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
-            <Button
-                android:id="@+id/signinShowEmailButton"
-                android:layout_centerInParent="true"
-                android:text="@string/show_email_login_text"
-                android:layout_width="match_parent"
-                android:layout_height="50dp" />
-
-        </RelativeLayout>
-
     </LinearLayout>
-
-    <Button
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/signinRegisterButton"
-        android:text="@string/register_text"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
-
 
 </RelativeLayout>

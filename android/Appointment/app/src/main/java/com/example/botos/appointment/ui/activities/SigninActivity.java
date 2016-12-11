@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.botos.appointment.R;
@@ -29,10 +31,11 @@ import com.example.botos.appointment.utils.StringUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,16 +43,16 @@ import java.util.HashMap;
 public class SigninActivity extends BaseActivity {
 
     private static final String TAG = "SigninActivity";
-    private Button mFacebookButton;
+    private RelativeLayout mFacebookButton;
     private AutoCompleteTextView mEmailEdit;
     private EditText mPasswordEdit;
     private LinearLayout mEmailLoginLayout;
     private Button mEmailButton;
-    private Button mShowEmailButton;
-    private Button mRegisterButton;
+    private LinearLayout mRegisterButton;
     private ProgressBar mLoginProgressBar;
     private CallbackManager mCallbackManager;
     private ProfileTracker mProfileTracker;
+    private TextView mForgotPasswordButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,19 +64,17 @@ public class SigninActivity extends BaseActivity {
     }
 
     private void findId() {
-        mFacebookButton = (Button) findViewById(R.id.signinFacebookButton);
+        mFacebookButton = (RelativeLayout) findViewById(R.id.signinFacebookButton);
         mEmailEdit = (AutoCompleteTextView) findViewById(R.id.signinEmailEdit);
         mPasswordEdit = (EditText) findViewById(R.id.signinPasswordEdit);
         mEmailLoginLayout = (LinearLayout) findViewById(R.id.signinEmailLayout);
         mEmailButton = (Button)findViewById(R.id.signinEmailButton);
-        mShowEmailButton = (Button)findViewById(R.id.signinShowEmailButton);
-        mRegisterButton = (Button)findViewById(R.id.signinRegisterButton);
+        mForgotPasswordButton = (TextView)findViewById(R.id.signinForgotPasswordButton);
+        mRegisterButton = (LinearLayout)findViewById(R.id.signinRegisterButton);
         mLoginProgressBar = (ProgressBar) findViewById(R.id.login_progress);
     }
 
     private void load() {
-        mEmailLoginLayout.setAlpha(0);
-        mShowEmailButton.setOnClickListener(ShowEmailLogin);
         mEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,9 +92,13 @@ public class SigninActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent register = new Intent(SigninActivity.this, RegisterActivity.class);
                 startActivity(register);
-                mShowEmailButton.setVisibility(View.VISIBLE);
-                mEmailLoginLayout.setVisibility(View.GONE);
-                mEmailLoginLayout.setAlpha(0);
+            }
+        });
+        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent forgotPassword = new Intent(SigninActivity.this, ForgotPasswordActivity.class);
+                startActivity(forgotPassword);
             }
         });
     }
@@ -212,20 +217,11 @@ public class SigninActivity extends BaseActivity {
 
     }
 
-    View.OnClickListener ShowEmailLogin = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mShowEmailButton.setVisibility(View.GONE);
-            mEmailLoginLayout.setVisibility(View.VISIBLE);
-            mEmailLoginLayout.animate().alpha(1).setDuration(500);
-        }
-    };
-
     private void loginRequest() {
         HashMap<String, String> params = new HashMap<>();
         params.put("email", mEmailEdit.getText().toString());
         params.put("password", mPasswordEdit.getText().toString());
-        ApiLibrary.postParamRequest(Constants.BASE_URL + Constants.LOGIN, params, new AppointmentApiResponse<UserModel>() {
+        ApiLibrary.postRequestUserModel(Constants.BASE_URL + Constants.LOGIN, params, null, new AppointmentApiResponse<UserModel>() {
             @Override
             public void onSuccess(UserModel response) {
                 Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
@@ -251,9 +247,10 @@ public class SigninActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<>();
         params.put("token", token);
         Toast.makeText(SigninActivity.this, token, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "serverFacebookLogin() called with: " + "token = [" + token + "]");
         final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(SigninActivity.this, false, null, getResources().getString(R.string.loading));
         progreeDialog.show();
-        ApiLibrary.postParamRequest(Constants.BASE_URL + Constants.FACEBOOK_LOGIN, params, new AppointmentApiResponse<UserModel>() {
+        ApiLibrary.postRequestUserModel(Constants.BASE_URL + Constants.FACEBOOK_LOGIN, params, null, new AppointmentApiResponse<UserModel>() {
             @Override
             public void onSuccess(UserModel response) {
                 Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");

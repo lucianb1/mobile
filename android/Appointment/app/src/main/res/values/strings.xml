@@ -21,9 +21,15 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="register_text">Register</string>
     <string name="show_email_login_text">Login with Email</string>
-    <string name="email_login_text">Email Login</string>
-    <string name="facebook_login_text">Facebook Login</string>
+    <string name="email_login_text">Autentificare</string>
+    <string name="facebook_login_text">Login with Facebook</string>
     <string name="success_request">Success</string>
     <string name="loading">Loading..</string>
+    <string name="no_account">Nu ai cont?</string>
+    <string name="crete_new">Creaza unul</string>
+    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="reset_password">Reseteaza parola</string>
+    <string name="enter_email_forgotpassword_text">Introdu email-ul pentru a primi o noua parola pe email.</string>
+    <string name="forgot_password_text">Ai uitat parola?</string>
 
 </resources>

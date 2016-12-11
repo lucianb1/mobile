@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="back_background">#1F1F1F</color>
+    <color name="facebook_color">#3b5998</color>
+    <color name="button_background">#414548</color>
+    <color name="text_color">#333436</color>
+    <color name="white_alpha">#b9ffffff</color>
+
 </resources>
