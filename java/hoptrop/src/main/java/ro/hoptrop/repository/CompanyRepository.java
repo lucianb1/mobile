@@ -25,6 +25,7 @@ import java.util.List;
 public class CompanyRepository {
 
     private static final CompanyRowMapper rowMapper = new CompanyRowMapper();
+    private static final String SELECT_CLAUSE = "SELECT id, name, x(coordinates) AS long, y(coordinates) AS lat, address FROM companies";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -55,7 +56,7 @@ public class CompanyRepository {
         jdbcTemplate.update(sql, params);
     }
 
-    public void updateCompanyToken(int id, String newToken) {
+    public void updateCompanyMembersToken(int id, String newToken) {
         String sql = "UPDATE companies SET members_token = :token where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id)
@@ -64,13 +65,19 @@ public class CompanyRepository {
     }
 
     public Company findCompany(int id) {
-        String sql = "SELECT id, name, x(coordinates) AS long, y(coordinates) AS lat, address FROM companies WHERE id = :id";
+        String sql = SELECT_CLAUSE + "WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
         List<Company> resultList = jdbcTemplate.query(sql, params, rowMapper);
         if (resultList.isEmpty()) {
             throw new NotFoundException();
         }
         return resultList.get(0);
+    }
+
+    public List<Company> findCompaniesByName(String name) {
+        String sql = SELECT_CLAUSE + "where name LOWER(name) like %:name%";
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
+        return jdbcTemplate.query(sql, params, rowMapper);
     }
 
     public int findCompanyIdByMembersToken(String token) {

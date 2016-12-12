@@ -15,5 +15,5 @@ public interface CompanyService {
 
     List<Company> findCompaniesByName(String name);
 
-    String regenerateMembersToken();
+    String regenerateMembersToken(int companyID);
 }

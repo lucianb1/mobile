@@ -7,6 +7,7 @@ import ro.hoptrop.model.company.Location;
 import ro.hoptrop.model.member.TimeTable;
 import ro.hoptrop.repository.CompanyRepository;
 import ro.hoptrop.service.CompanyService;
+import ro.hoptrop.utils.TokenUtils;
 
 import java.util.List;
 
@@ -26,5 +27,15 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<Company> findCompaniesByName(String name) {
         return null;
+    }
+
+    @Override
+    public String regenerateMembersToken(int companyID) {
+        String newToken = TokenUtils.generateMembersToken();
+        while (companyRepository.membersTokenExist(newToken)) {
+            newToken = TokenUtils.generateMembersToken();
+        }
+        companyRepository.updateCompanyMembersToken(companyID, newToken);
+        return newToken;
     }
 }

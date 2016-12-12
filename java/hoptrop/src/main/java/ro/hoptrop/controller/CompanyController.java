@@ -30,9 +30,10 @@ public class CompanyController {
 
     }
 
-    @RequestMapping(value="/token/generate", method = RequestMethod.GET)
+    //TODO for member admin
+    @RequestMapping(value = "/token/generate", method = RequestMethod.GET)
     public String regenerateMembersToken(PrincipalUser principal) {
-        return null;
+        return companyService.regenerateMembersToken(principal.getCompanyID());
     }
 
 }

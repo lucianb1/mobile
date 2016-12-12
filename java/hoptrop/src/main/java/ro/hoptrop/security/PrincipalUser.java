@@ -1,5 +1,6 @@
 package ro.hoptrop.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -13,9 +14,13 @@ public class PrincipalUser extends User {
         super(username, password, authorities);
     }
 
+    @JsonIgnore
     private int id;
     private String name;
     private String phone;
+
+    private Integer companyID;
+    private Integer memberID;
 
     public String getName() {
         return name;
@@ -45,5 +50,21 @@ public class PrincipalUser extends User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Integer getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(Integer companyID) {
+        this.companyID = companyID;
+    }
+
+    public Integer getMemberID() {
+        return memberID;
+    }
+
+    public void setMemberID(Integer memberID) {
+        this.memberID = memberID;
     }
 }
