@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public class AccountRepository {
 
-	private final AccountRowMapper rowMapper = new AccountRowMapper();
+	private static final AccountRowMapper rowMapper = new AccountRowMapper();
 	
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
