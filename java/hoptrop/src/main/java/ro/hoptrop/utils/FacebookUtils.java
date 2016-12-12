@@ -2,8 +2,6 @@ package ro.hoptrop.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -17,8 +15,8 @@ public class FacebookUtils {
 
 	private String appID;
 	private String appSecret;
-	private static final String SEPARATOR = "&";
-	private static final String EQUAL = "=";
+	private static final String SEPARATOR_SIGN = "&";
+	private static final String EQUAL_SIGN = "=";
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -30,17 +28,15 @@ public class FacebookUtils {
 				.queryParam("client_id", appID)
 				.queryParam("client_secret", appSecret)
 				.queryParam("fb_exchange_token", token);
-		HttpHeaders headers = new HttpHeaders();
-		HttpEntity<?> entity = new HttpEntity<>(headers);
 		URI finalUrl = builder.build().encode().toUri();
 		ResponseEntity<String> response = restTemplate.getForEntity(finalUrl, String.class);
 		return extractToken(response.getBody());
 	}
 
 	private String extractToken(String response) {
-		String[] params = response.split(SEPARATOR);
+		String[] params = response.split(SEPARATOR_SIGN);
 		String tokenParam = params[0];
-		return tokenParam.split(EQUAL)[1];
+		return tokenParam.split(EQUAL_SIGN)[1];
 	}
 	
 	public void setAppID(String appID) {
