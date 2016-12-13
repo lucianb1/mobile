@@ -19,7 +19,9 @@ public class PrincipalUser extends User {
     private String name;
     private String phone;
 
+    @JsonIgnore
     private Integer companyID;
+    @JsonIgnore
     private Integer memberID;
 
     public String getName() {

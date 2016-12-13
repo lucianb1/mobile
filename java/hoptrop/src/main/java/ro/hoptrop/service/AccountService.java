@@ -12,4 +12,5 @@ public interface AccountService {
     Account registerAccount(String email, String password, String name, String phone, AccountType type) throws AlreadyExistsException;
 
     void updateAccountDetails(int accountID, String newName, String newPhone);
+
 }
