@@ -139,7 +139,6 @@ public class SigninActivity extends BaseActivity {
             focusView.requestFocus();
             showProgress(false);
         } else {
-            Toast.makeText(SigninActivity.this, "Request start", Toast.LENGTH_SHORT).show();
             loginRequest();
         }
     }
@@ -224,10 +223,12 @@ public class SigninActivity extends BaseActivity {
         ApiLibrary.postRequestUserModel(Constants.BASE_URL + Constants.LOGIN, params, null, new AppointmentApiResponse<UserModel>() {
             @Override
             public void onSuccess(UserModel response) {
-                Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
                 Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
                 Engine.getInstance().userModel = response;
                 showProgress(false);
+                Intent main = new Intent(SigninActivity.this, UserMainMenuActivity.class);
+                startActivity(main);
+                finish();
             }
 
             @Override
@@ -246,7 +247,6 @@ public class SigninActivity extends BaseActivity {
     private void serverFacebookLogin(String token) {
         HashMap<String, String> params = new HashMap<>();
         params.put("token", token);
-        Toast.makeText(SigninActivity.this, token, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "serverFacebookLogin() called with: " + "token = [" + token + "]");
         final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(SigninActivity.this, false, null, getResources().getString(R.string.loading));
         progreeDialog.show();

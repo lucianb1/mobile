@@ -7,20 +7,21 @@
     <string name="title_activity_register">Inregistrare</string>
     <string name="title_activity_forgot_password">Am uitat parola</string>
     <string name="title_activity_register_final_step">Inca un pas</string>
+    <string name="title_activity_user_main_menu">Meniu</string>
     <string name="facebook_app_id">1150054408414271</string>
 
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="field">Fild</string>
-    <string name="is_mandatory">is mandatory!</string>
-    <string name="password_not_match">Password doesnt match!</string>
-    <string name="email">Email</string>
-    <string name="name">Name</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="error_invalid_email">Adresa de e-mail nu este valida</string>
+    <string name="error_invalid_password">Parola ii prea scurta</string>
+    <string name="error_field_required">Informatie necesara</string>
+    <string name="field">Informatia</string>
+    <string name="is_mandatory">este necesara!</string>
+    <!--<string name="password_not_match">Password doesnt match!</string>-->
+    <string name="email">E-mail</string>
+    <string name="name">Nume</string>
+    <string name="phone_number">Numar de telefon</string>
+    <string name="password">Parola</string>
+    <string name="confirm_password">Confirma parola</string>
     <string name="register_text">Inregistrare</string>
     <string name="show_email_login_text">Login with Email</string>
     <string name="email_login_text">Autentificare</string>
@@ -33,5 +34,8 @@
     <string name="enter_email_forgotpassword_text">Introdu email-ul pentru a primi o noua parola pe email.</string>
     <string name="forgot_password_text">Ai uitat parola?</string>
     <string name="enter_phone_number">Introdu numarul de telefon</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>

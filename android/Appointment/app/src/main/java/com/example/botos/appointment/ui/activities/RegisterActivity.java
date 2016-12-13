@@ -1,6 +1,7 @@
 package com.example.botos.appointment.ui.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
@@ -87,9 +88,10 @@ public class RegisterActivity extends BaseActivity {
                 mPasswordInputLayout.requestFocus();
                 return false;
             }
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -115,10 +117,13 @@ public class RegisterActivity extends BaseActivity {
         ApiLibrary.postRequestUserModel(Constants.BASE_URL + Constants.REGISTER, params, null, new AppointmentApiResponse<UserModel>() {
             @Override
             public void onSuccess(UserModel response) {
-                Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
                 Toast.makeText(RegisterActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
                 Engine.getInstance().userModel = response;
                 progreeDialog.dismiss();
+                Intent main = new Intent(RegisterActivity.this, UserMainMenuActivity.class);
+                main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(main);
+                finish();
             }
 
             @Override
