@@ -4,21 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.CompanyService;
 
 /**
  * Created by Luci on 12-Dec-16.
  */
-@RestController
-@RequestMapping("companies")
+//@RestController
+@RequestMapping("/companies")
 public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
 
-    public void findCompaiesByName(@RequestParam(required = false) String name) {
+    public void findCompaiesByName(@RequestParam int domainID, @RequestParam(required = false) String name) {
 
     }
 

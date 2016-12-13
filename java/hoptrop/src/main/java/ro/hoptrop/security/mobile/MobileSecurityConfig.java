@@ -1,7 +1,5 @@
 package ro.hoptrop.security.mobile;
 
-import javax.servlet.Filter;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +10,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import ro.hoptrop.service.AuthenticationService;
+
+import javax.servlet.Filter;
 
 @Configuration
 public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -45,7 +44,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 	     web.ignoring()
-	        .antMatchers("/mobile/login/**", "/mobile/forgotpassword", "/mobile/register");
+	        .antMatchers("/mobile/login/**", "/mobile/forgotpassword", "/account/register");
 	}
 	
 	@Override

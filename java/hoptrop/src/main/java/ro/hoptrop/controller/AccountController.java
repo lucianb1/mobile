@@ -35,7 +35,7 @@ public class AccountController {
         accountService.updateAccountDetails(principal.getId(), request.getName(), request.getPhone());
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public MobileLoginResponse register(@Valid @RequestBody RegisterRequest request) throws AlreadyExistsException {
         Account registeredAccount = accountService.registerAccount(request.getEmail(), request.getPassword(), request.getName(), request.getPhone(), AccountType.USER);
         return authenticationService.loginAccount(registeredAccount);

@@ -13,7 +13,7 @@ public interface CompanyService {
 
     void updateCompany(int id, String newName, Location newLocation, TimeTable newTimetable);
 
-    List<Company> findCompaniesByName(String name);
+    List<Company> findCompaniesByNameAndDomain(int domainID, String name);
 
     String regenerateMembersToken(int companyID);
 }

@@ -74,7 +74,8 @@ public class CompanyRepository {
         return resultList.get(0);
     }
 
-    public List<Company> findCompaniesByName(String name) {
+    public List<Company> findCompaniesByNameAndDomain(int domainID, String name) {
+        //TODO use domain
         String sql = SELECT_CLAUSE + "where name LOWER(name) like %:name%";
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
         return jdbcTemplate.query(sql, params, rowMapper);

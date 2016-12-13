@@ -2,13 +2,12 @@ package ro.hoptrop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import ro.hoptrop.service.MemberService;
 
 /**
  * Created by Luci on 13-Dec-16.
  */
-@RestController
+//@RestController
 public class MemberController {
 
     @Autowired

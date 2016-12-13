@@ -25,8 +25,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<Company> findCompaniesByName(String name) {
-        return null;
+    public List<Company> findCompaniesByNameAndDomain(int domainID, String name) {
+        return companyRepository.findCompaniesByNameAndDomain(domainID, name);
     }
 
     @Override
