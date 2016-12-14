@@ -14,7 +14,6 @@ import ro.hoptrop.web.request.FacebookLoginRequest;
 import ro.hoptrop.web.request.LoginRequest;
 import ro.hoptrop.web.response.MobileLoginResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -39,7 +38,7 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public void logout(HttpServletRequest request, TokenAuthentication authentication) {
+	public void logout(TokenAuthentication authentication) {
 		SecurityContextHolder.clearContext();
 		authenticationService.mobileLogout(authentication.getToken());
 	}
