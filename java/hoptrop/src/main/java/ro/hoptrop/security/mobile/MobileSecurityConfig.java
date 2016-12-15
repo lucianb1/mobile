@@ -51,7 +51,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		 http
-		 	.antMatcher("/mobile/**")
+//		 	.antMatcher("/mobile/**")
 		 	.authorizeRequests()
 		 		.anyRequest().authenticated()
 		 		.and()
@@ -60,7 +60,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	        .exceptionHandling()
 	             .authenticationEntryPoint(restAuthenticationEntryPoint)
 	             .and()
-         .csrf().disable();
+         	.csrf().disable().logout().disable().httpBasic().disable().formLogin().disable();
 
 		if ("true".equals(System.getProperty("httpsOnly"))) {
 			LOG.info("launching the application in HTTPS-only mode");

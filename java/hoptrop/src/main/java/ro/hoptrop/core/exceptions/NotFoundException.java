@@ -1,7 +1,11 @@
 package ro.hoptrop.core.exceptions;
 
-public class NotFoundException extends RuntimeException{
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-	private static final long serialVersionUID = 14221L;
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Resource not found")
+public class NotFoundException extends RuntimeException {
+
+    private static final long serialVersionUID = 14221L;
 
 }
