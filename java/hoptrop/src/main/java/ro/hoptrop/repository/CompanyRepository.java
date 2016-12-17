@@ -12,6 +12,7 @@ import ro.hoptrop.core.rowmapper.CompanyRowMapper;
 import ro.hoptrop.core.sql.SqlQueryBuilder;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
+import ro.hoptrop.model.timetable.Timetable;
 import ro.hoptrop.utils.JsonUtils;
 import ro.hoptrop.utils.SqlUtils;
 
@@ -45,7 +46,7 @@ public class CompanyRepository {
         return this.findCompany(keyHolder.getKey().intValue());
     }
 
-    public void updateCompany(int id, String newName, Location newLocation, TimeTable newTimeTable) {
+    public void updateCompany(int id, String newName, Location newLocation, Timetable newTimeTable) {
         String sql = "UPDATE companies SET name = :newName, address = :newAddress, coordinates = :newCoordinates, timetable = :newTimetable";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("newName", newName)

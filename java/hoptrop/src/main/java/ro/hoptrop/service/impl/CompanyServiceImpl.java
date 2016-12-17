@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
+import ro.hoptrop.model.timetable.Timetable;
 import ro.hoptrop.repository.CompanyRepository;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.utils.TokenUtils;
@@ -20,7 +21,7 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
 
     @Override
-    public void updateCompany(int id, String newName, Location newLocation, TimeTable newTimetable) {
+    public void updateCompany(int id, String newName, Location newLocation, Timetable newTimetable) {
     }
 
     @Override
