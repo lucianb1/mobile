@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.botos.appointment.R;
+import com.example.botos.appointment.database.OrmLiteHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 public class BaseActivity extends AppCompatActivity {
 
+    private OrmLiteHelper mDatabaseHelper;
     private Toolbar mToolBar;
 
     @Override
@@ -36,9 +39,23 @@ public class BaseActivity extends AppCompatActivity {
 
     private void load() {
         setSupportActionBar(mToolBar);
+        mDatabaseHelper = new OrmLiteHelper(BaseActivity.this);
     }
 
     public Toolbar getToolBar() {
         return mToolBar;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDatabaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            mDatabaseHelper = null;
+        }
+    }
+
+    public OrmLiteHelper getHelper() {
+        return mDatabaseHelper;
     }
 }

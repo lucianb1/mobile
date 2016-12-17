@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 
 public class ForgotPasswordActivity extends BaseActivity {
 
+    private static final String TAG = "forgotPasswordActivity";
     private TextInputLayout mEmailEdit;
     private Button mForgotPasswordButton;
 
@@ -100,6 +102,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
             @Override
             public void onFailure(String error) {
+                Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
                 Toast.makeText(ForgotPasswordActivity.this, error, Toast.LENGTH_SHORT).show();
                 progreeDialog.dismiss();
             }

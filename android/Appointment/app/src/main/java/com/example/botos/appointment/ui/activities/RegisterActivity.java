@@ -16,6 +16,7 @@ import com.example.botos.appointment.models.UserModel;
 import com.example.botos.appointment.platform.AppointmentApiResponse;
 import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
+import com.example.botos.appointment.ui.activities.userScreens.UserMainMenuActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
@@ -88,6 +89,18 @@ public class RegisterActivity extends BaseActivity {
                 mPasswordInputLayout.requestFocus();
                 return false;
             }
+
+            if (mPasswordInputLayout.getEditText().getText().length() > 50) {
+                mPasswordInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password));
+                mPasswordInputLayout.requestFocus();
+                return false;
+            }
+
+            if (mNameInputLayout.getEditText().getText().length() < 3) {
+                mNameInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password));
+                mNameInputLayout.requestFocus();
+                return false;
+            }
             return true;
         }
 
@@ -133,6 +146,7 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onFailure(String error) {
+                Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
                 Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_SHORT).show();
                 progreeDialog.dismiss();
             }

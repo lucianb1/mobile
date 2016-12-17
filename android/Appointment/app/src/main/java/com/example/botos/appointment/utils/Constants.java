@@ -13,6 +13,7 @@ public class Constants {
     public static String LOGOUT = "/mobile/logout";
     public static String FACEBOOK_LOGIN = "/mobile/login/facebook";
     public static String FORGOT_PASSWORD = "/mobile/forgotpassword";
-    public static String UPDATE_ACCOUNT = "/account/updateAccount";
+    public static String ADD_PHONE = "/account";
+
 
 }

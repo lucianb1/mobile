@@ -24,6 +24,7 @@ import com.example.botos.appointment.models.UserModel;
 import com.example.botos.appointment.platform.AppointmentApiResponse;
 import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
+import com.example.botos.appointment.ui.activities.userScreens.UserMainMenuActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
@@ -34,9 +35,9 @@ import com.facebook.FacebookException;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.j256.ormlite.stmt.QueryBuilder;
 
-import org.w3c.dom.Text;
-
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -61,6 +62,9 @@ public class SigninActivity extends BaseActivity {
         facebookCallBack();
         findId();
         load();
+        if (getUserFromDataBase()) {
+            goToMainMenu();
+        }
     }
 
     private void findId() {
@@ -225,10 +229,10 @@ public class SigninActivity extends BaseActivity {
             public void onSuccess(UserModel response) {
                 Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
                 Engine.getInstance().userModel = response;
+                Engine.getInstance().userModel.setIsLoging(true);
                 showProgress(false);
-                Intent main = new Intent(SigninActivity.this, UserMainMenuActivity.class);
-                startActivity(main);
-                finish();
+                addToDataBase(response);
+                goToMainMenu();
             }
 
             @Override
@@ -238,6 +242,7 @@ public class SigninActivity extends BaseActivity {
 
             @Override
             public void onFailure(String error) {
+                Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
                 Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
                 showProgress(false);
             }
@@ -273,6 +278,7 @@ public class SigninActivity extends BaseActivity {
 
             @Override
             public void onFailure(String error) {
+                Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
                 Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
                 if (progreeDialog.isShowing())
                     progreeDialog.dismiss();
@@ -285,4 +291,47 @@ public class SigninActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void addToDataBase(UserModel userModel) {
+        try {
+            getHelper().getUserModelDao().createOrUpdate(userModel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void goToMainMenu() {
+        switch (Engine.getInstance().userModel.getUserType()) {
+            case UserModel.NORMAL_USER:
+                Intent userMain = new Intent(SigninActivity.this, UserMainMenuActivity.class);
+                startActivity(userMain);
+                break;
+            case UserModel.MEMBER:
+                Intent memberMain = new Intent(SigninActivity.this, UserMainMenuActivity.class);
+                startActivity(memberMain);
+                break;
+            case UserModel.ADMIN_MEMBER:
+                break;
+            case UserModel.ADMIN:
+                break;
+            default:
+                break;
+        }
+        finish();
+    }
+
+    private boolean getUserFromDataBase() {
+
+        try {
+            QueryBuilder<UserModel, Integer> queryBuilder = getHelper().getUserModelDao().queryBuilder();
+            queryBuilder.where().eq(UserModel.IS_LOGING, true);
+            Engine.getInstance().userModel = getHelper().getUserModelDao().queryForFirst(queryBuilder.prepare());
+            if (Engine.getInstance().userModel != null)
+                return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

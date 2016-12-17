@@ -13,8 +13,11 @@ import android.widget.Button;
 
 import com.example.botos.appointment.R;
 import com.example.botos.appointment.ui.BaseActivity;
+import com.example.botos.appointment.utils.ApiLibrary;
+import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.StringUtils;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class RegisterFinalStepActivity extends BaseActivity {
@@ -78,7 +81,9 @@ public class RegisterFinalStepActivity extends BaseActivity {
     }
 
     private void finalResgisterRequest() {
-
+        HashMap<String, String> params = new HashMap<>();
+//        params.put("token", token);
+//        ApiLibrary.putRequestUserModel(Constants.BASE_URL + Constants.ADD_PHONE, )
     }
 
 }

@@ -22,6 +22,7 @@ public class ConvertFromJson {
             userModel.setPassword(jsonObject.getJSONObject("user").getString(UserModel.PASSWORD));
             userModel.setPhone(jsonObject.getJSONObject("user").getString(UserModel.PHONE));
             userModel.setUserName(jsonObject.getJSONObject("user").getString(UserModel.USERNAME));
+            userModel.setUserType(jsonObject.getJSONObject("user").getJSONArray("authorities").getJSONObject(0).getString("authority"));
             userModel.setToken(jsonObject.getString(UserModel.TOKEN));
 
         } catch (JSONException e) {

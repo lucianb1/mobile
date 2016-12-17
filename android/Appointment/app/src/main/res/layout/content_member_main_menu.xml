@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.activities.userScreens.UserMainMenuActivity"
-    tools:showIn="@layout/app_bar_user_main_menu">
+    tools:context=".ui.activities.memberScreens.MemberMainMenuActivity"
+    tools:showIn="@layout/app_bar_member_main_menu">
 
 </RelativeLayout>

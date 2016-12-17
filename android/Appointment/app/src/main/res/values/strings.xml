@@ -13,6 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="error_invalid_email">Adresa de e-mail nu este valida</string>
     <string name="error_invalid_password">Parola ii prea scurta</string>
+    <string name="error_invalid_name">Numele ii prea scurt</string>
+    <string name="error_invalid_password_long">Parola ii prea lunga</string>
     <string name="error_field_required">Informatie necesara</string>
     <string name="field">Informatia</string>
     <string name="is_mandatory">este necesara!</string>
@@ -37,5 +39,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_member_main_menu">MemberMainMenuActivity</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
 
 </resources>

@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -244,6 +247,71 @@ public class ApiLibrary {
                     responseApi.onFailure(finalResponse);
             }
         });
+    }
+
+    private void putRequest(String requestURL, HashMap<String, String> params, HashMap<String, String> header) {
+//        URL url = null;
+//        try {
+//            url = new URL(Constants.BASE_URL + Constants.ADD_PHONE);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setDoOutput(true);
+//            conn.setRequestMethod("PUT");
+//            OutputStreamWriter out = new OutputStreamWriter(
+//                    httpCon.getOutputStream());
+//            out.write("Resource content");
+//            out.close();
+//            httpCon.getInputStream();
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (ProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    public static void putRequestUserModel(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<UserModel> responseApi) {
+        DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    url = new URL(requestURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setReadTimeout(15000);
+                    conn.setConnectTimeout(15000);
+                    conn.setRequestMethod("PUT");
+//                    conn.setDoInput(true);
+//                    conn.setDoOutput(true);
+
+                    if (header != null)
+                        setHeaders(conn, header);
+                    if (params != null)
+                        setParams(conn, params);
+
+                    int responseCode=conn.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        onUserSuccessBlock(conn, responseApi);
+                    }
+                    else {
+                        onUserFailureBlock(conn, responseApi);
+                    }
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseApi != null)
+                                responseApi.onFailure(e.getMessage());
+                        }
+                    });
+                }
+
+            }
+        });
+
     }
 //
 //    private static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
