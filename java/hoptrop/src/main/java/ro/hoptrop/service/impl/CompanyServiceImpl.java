@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
-import ro.hoptrop.model.member.TimeTable;
 import ro.hoptrop.repository.CompanyRepository;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.utils.TokenUtils;

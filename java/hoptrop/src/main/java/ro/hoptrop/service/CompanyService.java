@@ -2,7 +2,6 @@ package ro.hoptrop.service;
 
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
-import ro.hoptrop.model.member.TimeTable;
 
 import java.util.List;
 

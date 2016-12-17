@@ -12,7 +12,6 @@ import ro.hoptrop.core.rowmapper.CompanyRowMapper;
 import ro.hoptrop.core.sql.SqlQueryBuilder;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
-import ro.hoptrop.model.member.TimeTable;
 import ro.hoptrop.utils.JsonUtils;
 import ro.hoptrop.utils.SqlUtils;
 

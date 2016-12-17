@@ -48,7 +48,25 @@ CREATE TABLE IF NOT EXISTS members (
     order_nr SMALLINT NOT NULL DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS timetables (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    member_id SMALLINT NOT NULL,
+    date DATETIME NOT NULL,
+    hours blob NOT NULL
+);
 
+CREATE TABLE IF NOT EXISTS default_timetables (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    member_id SMALLINT NOT NULL,
+    hours BINARY(384) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS appointments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    member_id SMALLINT NOT NULL,
+    hours BINARY(384) NOT NULL
+);
 
 
 /**
