@@ -1,8 +1,17 @@
 package ro.hoptrop.security.mobile;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
+import org.apache.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.web.filter.GenericFilterBean;
+import ro.hoptrop.core.exceptions.MobileAuthenticationException;
+import ro.hoptrop.core.exceptions.SecurityException;
+import ro.hoptrop.security.PrincipalUser;
+import ro.hoptrop.service.AuthenticationService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,20 +19,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.web.filter.GenericFilterBean;
-
-import ro.hoptrop.core.exceptions.MobileAuthenticationException;
-import ro.hoptrop.core.exceptions.SecurityException;
-import ro.hoptrop.security.PrincipalUser;
-import ro.hoptrop.service.AuthenticationService;
+import java.io.IOException;
 
 public class TokenAuthenticationFilter extends GenericFilterBean {
 
@@ -59,7 +55,7 @@ public class TokenAuthenticationFilter extends GenericFilterBean {
 
 			SecurityContextHolder.getContext().setAuthentication(auth);
 			chain.doFilter(request, response);
-		} catch (Exception e) {
+		} catch (EmptyResultDataAccessException e) {
 			LOG.info("Exception occurred while trying to login user based on token: " + e.getMessage());
 			entryPoint.commence(httpServletRequest, httpServletResponse, new MobileAuthenticationException("Cannot authenticate"));
 		}

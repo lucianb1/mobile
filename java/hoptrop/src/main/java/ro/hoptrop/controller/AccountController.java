@@ -1,6 +1,7 @@
 package ro.hoptrop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,7 @@ public class AccountController {
     private AuthenticationService authenticationService;
 
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateAccount(@Valid @RequestBody UpdateAccountRequest request, PrincipalUser principal) {
+    public void updateAccount(@Valid @RequestBody UpdateAccountRequest request, @AuthenticationPrincipal PrincipalUser principal) {
         accountService.updateAccountDetails(principal.getId(), request.getName(), request.getPhone());
     }
 

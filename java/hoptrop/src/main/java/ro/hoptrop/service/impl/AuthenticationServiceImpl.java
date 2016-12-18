@@ -27,7 +27,7 @@ import java.util.List;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class);
-    private static final String NO = "NO";
+    private static final String NO_KEYWORD = "NO_KEYWORD";
 
     @Autowired
     private RememberMeTokenRepository tokenRepository;
@@ -89,7 +89,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         FacebookUser loadedUser = facebook.fetchObject("me", FacebookUser.class, fields);
         String email = loadedUser.getEmail();
         String name = loadedUser.getName();
-        Account account = accountRepository.createAccount(email, passwordEncoder.encode(TokenUtils.generateToken()), name, NO, AccountType.USER);
+        Account account = null;
+        try {
+            account = accountRepository.findAccount(email);
+        } catch (NotFoundException e) {
+            account = accountRepository.createAccount(email, passwordEncoder.encode(TokenUtils.generateToken()), name, NO_KEYWORD, AccountType.USER);
+        }
         return this.loginAccount(account);
     }
 
@@ -105,7 +110,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public PrincipalUser mapToPrincipal(Account account) {
         return new PrincipalUser(account.getEmail(), "", createAuthorities(account.getType().name()))
                 .setName(account.getName())
-                .setPhone(account.getPhone());
+                .setPhone(account.getPhone())
+                .setId(account.getId());
     }
 
     private MobileLoginResponse mapToLoginResponse(Account account, String token) {

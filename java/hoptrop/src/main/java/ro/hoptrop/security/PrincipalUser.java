@@ -10,6 +10,8 @@ public class PrincipalUser extends User {
 
     private static final long serialVersionUID = -7022660152199683334L;
 
+
+
     public PrincipalUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }
@@ -50,8 +52,9 @@ public class PrincipalUser extends User {
         return id;
     }
 
-    public void setId(int id) {
+    public PrincipalUser setId(int id) {
         this.id = id;
+        return this;
     }
 
     public Integer getCompanyID() {

@@ -1,11 +1,11 @@
-drop database mobile;
-create database mobile;
-use mobile;
+--drop database mobile;
+--create database mobile;
+--use mobile;
 
 
 CREATE TABLE IF NOT EXISTS accounts (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	email VARCHAR(100) NOT NULL,
+	email VARCHAR(100) UNIQUE NOT NULL,
 	password BINARY(60) NOT NULL,
 	role ENUM("USER", "MEMBER", "MEMBER_ADMIN") NOT NULL,
 	phone VARCHAR(20) NOT NULL,
