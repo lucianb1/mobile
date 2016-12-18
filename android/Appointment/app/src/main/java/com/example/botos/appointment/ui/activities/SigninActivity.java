@@ -266,7 +266,8 @@ public class SigninActivity extends BaseActivity {
                     Intent finalStepRegister = new Intent(SigninActivity.this, RegisterFinalStepActivity.class);
                     startActivity(finalStepRegister);
                 } else {
-
+                    addToDataBase(response);
+                    goToMainMenu();
                 }
             }
 
