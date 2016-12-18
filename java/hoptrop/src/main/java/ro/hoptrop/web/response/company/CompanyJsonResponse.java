@@ -1,24 +1,24 @@
-package ro.hoptrop.model.company;
+package ro.hoptrop.web.response.company;
+
+import ro.hoptrop.model.company.Location;
 
 /**
  * Created by Luci on 12-Dec-16.
  */
-public class Company {
+public class CompanyJsonResponse {
 
     private final int id;
     private final String name;
-    private final String membersToken;
     private final Location location;
 
-    Company(int id, String name, String membersToken, Location location) {
+    CompanyJsonResponse(int id, String name, Location location) {
         this.id = id;
         this.name = name;
-        this.membersToken = membersToken;
         this.location = location;
     }
 
-    public static CompanyBuilder builder() {
-        return new CompanyBuilder();
+    public static CompanyJsonResponseBuilder builder() {
+        return new CompanyJsonResponseBuilder();
     }
 
     public int getId() {
@@ -31,9 +31,5 @@ public class Company {
 
     public Location getLocation() {
         return location;
-    }
-
-    public String getMembersToken() {
-        return membersToken;
     }
 }

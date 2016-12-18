@@ -3,17 +3,15 @@ package ro.hoptrop.model.member;
 public class Member {
 
 	private final int id;
-	private final String accountID;
-	private final String companyID;
+	private final int accountID;
+	private final int companyID;
 	private final String name;
-	private final byte[] image;
 
-	Member(int id, String accountID, String companyID, String name, byte[] image) {
+	Member(int id, int accountID, int companyID, String name) {
 		this.id = id;
 		this.accountID = accountID;
 		this.companyID = companyID;
 		this.name = name;
-		this.image = image;
 	}
 
 	public static MemberBuilder builder() {
@@ -25,7 +23,6 @@ public class Member {
 				.setId(id)
 				.setAccountID(accountID)
 				.setCompanyID(companyID)
-				.setImage(image)
 				.setName(name);
 	}
 	
@@ -34,20 +31,16 @@ public class Member {
 		return id;
 	}
 
-	public String getAccountID() {
+	public int getAccountID() {
 		return accountID;
 	}
 
-	public String getCompanyID() {
+	public int getCompanyID() {
 		return companyID;
 	}
 
 	public String getName() {
 		return name;
-	}
-
-	public byte[] getImage() {
-		return image;
 	}
 
 }

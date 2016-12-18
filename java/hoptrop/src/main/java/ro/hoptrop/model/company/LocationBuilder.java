@@ -13,6 +13,10 @@ public class LocationBuilder {
     LocationBuilder() {
     }
 
+    public Location build() {
+        return new Location(address, latitude, longitude);
+    }
+
     public LocationBuilder setAddress(String address) {
         this.address = address;
         return this;

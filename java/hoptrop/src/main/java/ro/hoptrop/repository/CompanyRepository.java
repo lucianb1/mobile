@@ -12,7 +12,7 @@ import ro.hoptrop.core.rowmapper.CompanyRowMapper;
 import ro.hoptrop.core.sql.SqlQueryBuilder;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
-import ro.hoptrop.model.timetable.Timetable;
+import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.utils.JsonUtils;
 import ro.hoptrop.utils.SqlUtils;
 
@@ -25,7 +25,7 @@ import java.util.List;
 public class CompanyRepository {
 
     private static final CompanyRowMapper rowMapper = new CompanyRowMapper();
-    private static final String SELECT_CLAUSE = "SELECT id, name, x(coordinates) AS long, y(coordinates) AS lat, address FROM companies";
+    private static final String SELECT_CLAUSE = "SELECT c.id, c.name, x(c.coordinates) AS long, y(c.coordinates) AS lat, c.address FROM companies c ";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -46,7 +46,7 @@ public class CompanyRepository {
         return this.findCompany(keyHolder.getKey().intValue());
     }
 
-    public void updateCompany(int id, String newName, Location newLocation, Timetable newTimeTable) {
+    public void updateCompany(int id, String newName, Location newLocation, WeekTimetable newTimeTable) {
         String sql = "UPDATE companies SET name = :newName, address = :newAddress, coordinates = :newCoordinates, timetable = :newTimetable";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("newName", newName)
@@ -75,10 +75,16 @@ public class CompanyRepository {
     }
 
     public List<Company> findCompaniesByNameAndDomain(int domainID, String name) {
-        //TODO use domain
-        String sql = SELECT_CLAUSE + "where name LOWER(name) like %:name%";
-        MapSqlParameterSource params = new MapSqlParameterSource().addValue("name", name);
-        return jdbcTemplate.query(sql, params, rowMapper);
+        SqlQueryBuilder builder = new SqlQueryBuilder(SELECT_CLAUSE)
+                .append("inner join company_to_domains cd on c.id = cd.company_id ")
+                .append("inner join company_domains d on cd.domain_id = d.id ")
+                .append("WHERE d.id = :domainID ")
+                .conditionalAppend(name != null, "AND c.name LOWER(c.name) like %:name%");
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", name)
+                .addValue("domainID", domainID);
+        return jdbcTemplate.query(builder.toString(), params, rowMapper);
     }
 
     public int findCompanyIdByMembersToken(String token) {

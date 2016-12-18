@@ -1,3 +1,8 @@
+drop database mobile;
+create database mobile;
+use mobile;
+
+
 CREATE TABLE IF NOT EXISTS accounts (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	email VARCHAR(100) NOT NULL,
@@ -26,10 +31,8 @@ CREATE TABLE IF NOT EXISTS companies (
     id SMALLINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     address VARCHAR(100) NOT NULL,
-    member_token VARCHAR(30) NOT NULL,
     coordinates POINT,
     image BLOB,
-    timetable VARCHAR(200),
     order_nr SMALLINT NOT NULL DEFAULT 0,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -42,6 +45,7 @@ CREATE TABLE IF NOT EXISTS companies_to_domains (
 
 CREATE TABLE IF NOT EXISTS members (
     id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
     company_id SMALLINT NOT NULL,
     name varchar(30) NOT NULL,
     image BLOB,
@@ -55,27 +59,33 @@ CREATE TABLE IF NOT EXISTS member_services (
     order_nr TINYINT NOT NULL DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS appointments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    member_id SMALLINT NOT NULL,
+    member_services TINYINT NOT NULL,
+    hour SMALLINT NOT NULL -- in quarters
+);
+
+CREATE TABLE IF NOT EXISTS member_tokens (
+    id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+    company_id SMALLINT NOT NULL,
+    token VARCHAR(30) NOT NULL,
+    is_admin bit NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS member_default_timetables (
+    id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+    member_id SMALLINT NOT NULL,
+    timetable BLOB
+);
+
 CREATE TABLE IF NOT EXISTS timetables (
     id INT PRIMARY KEY AUTO_INCREMENT,
     member_id SMALLINT NOT NULL,
     date DATETIME NOT NULL,
     hours VARBINARY(384) NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS default_timetables (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    member_id SMALLINT NOT NULL,
-    hours VARBINARY(384) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS appointments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    account_id INT NOT NULL,
-    member_id SMALLINT NOT NULL,
-    member_services TINYINT NOT NULL,
-    hour SMALLINT NOT NULL, -- in quarters
-);
-
 
 /**
 role(USER, MEMBER, MEMBER_ADMIN)

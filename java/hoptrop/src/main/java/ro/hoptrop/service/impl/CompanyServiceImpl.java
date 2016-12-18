@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
-import ro.hoptrop.model.timetable.Timetable;
 import ro.hoptrop.repository.CompanyRepository;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.utils.TokenUtils;
@@ -21,12 +20,23 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
 
     @Override
-    public void updateCompany(int id, String newName, Location newLocation, Timetable newTimetable) {
+    public void setCompanyLocation(double longitude, double latitude) {
+
+    }
+
+    @Override
+    public void updateCompany(int id, String newName, Location newLocation) {
+        companyRepository.updateCompany(id, newName, newLocation, null);
     }
 
     @Override
     public List<Company> findCompaniesByNameAndDomain(int domainID, String name) {
-        return companyRepository.findCompaniesByNameAndDomain(domainID, name);
+        return companyRepository.findCompaniesByNameAndDomain(domainID, name == null ? null : name.trim());
+    }
+
+    @Override
+    public Company findByID(int id) {
+        return companyRepository.findCompany(id);
     }
 
     @Override

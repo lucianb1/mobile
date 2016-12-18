@@ -24,4 +24,9 @@ public class DomainRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+//    public List<Integer> getDomainsForCompany(int companyID) {
+//        String sql = "SELECT d.id FROM company_domains d INNER JOIN company_to_domains j ON j.domain_id = d.id WHERE j.company_id = :companyID";
+//        return jdbcTemplate.queryForList(sql, new MapSqlParameterSource().addValue("companyID", companyID), Integer.class);
+//    }
+
 }

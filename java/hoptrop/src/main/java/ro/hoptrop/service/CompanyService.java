@@ -2,7 +2,6 @@ package ro.hoptrop.service;
 
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
-import ro.hoptrop.model.timetable.Timetable;
 
 import java.util.List;
 
@@ -11,9 +10,13 @@ import java.util.List;
  */
 public interface CompanyService {
 
-    void updateCompany(int id, String newName, Location newLocation, Timetable newTimetable);
+    void setCompanyLocation(double longitude, double latitude);
+
+    void updateCompany(int id, String newName, Location newLocation);
 
     List<Company> findCompaniesByNameAndDomain(int domainID, String name);
+
+    Company findByID(int id);
 
     String regenerateMembersToken(int companyID);
 }
