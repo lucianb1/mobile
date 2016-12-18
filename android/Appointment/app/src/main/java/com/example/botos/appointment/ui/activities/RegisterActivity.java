@@ -91,13 +91,25 @@ public class RegisterActivity extends BaseActivity {
             }
 
             if (mPasswordInputLayout.getEditText().getText().length() > 50) {
-                mPasswordInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password));
+                mPasswordInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password_long));
                 mPasswordInputLayout.requestFocus();
                 return false;
             }
 
+            if (mPasswordInputLayout.getEditText().getText().toString().contains(" ")) {
+                mPasswordInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password_spaces));
+                mPasswordInputLayout.requestFocus();
+                return false;
+            }
+
+            if (mNumberInputLayout.getEditText().getText().toString().contains(" ")) {
+                mNumberInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_phone_spaces));
+                mNumberInputLayout.requestFocus();
+                return false;
+            }
+
             if (mNameInputLayout.getEditText().getText().length() < 3) {
-                mNameInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_password));
+                mNameInputLayout.getEditText().setError(getResources().getString(R.string.error_invalid_name));
                 mNameInputLayout.requestFocus();
                 return false;
             }

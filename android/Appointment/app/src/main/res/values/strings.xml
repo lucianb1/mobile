@@ -13,6 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="error_invalid_email">Adresa de e-mail nu este valida</string>
     <string name="error_invalid_password">Parola ii prea scurta</string>
+    <string name="error_invalid_password_spaces">Nu sunt permise spatiile in parola</string>
+    <string name="error_invalid_phone_spaces">Nu sunt permise spatiile in numarul de telefon</string>
     <string name="error_invalid_name">Numele ii prea scurt</string>
     <string name="error_invalid_password_long">Parola ii prea lunga</string>
     <string name="error_field_required">Informatie necesara</string>

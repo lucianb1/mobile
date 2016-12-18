@@ -262,7 +262,7 @@ public class SigninActivity extends BaseActivity {
                 Engine.getInstance().userModel = response;
                 if (progreeDialog.isShowing())
                     progreeDialog.dismiss();
-                if (response.getPhone().equals("NO")) {
+                if (response.getPhone().equals("NO_KEYWORD")) {
                     Intent finalStepRegister = new Intent(SigninActivity.this, RegisterFinalStepActivity.class);
                     startActivity(finalStepRegister);
                 } else {

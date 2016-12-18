@@ -1,27 +1,36 @@
 package com.example.botos.appointment.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.botos.appointment.R;
+import com.example.botos.appointment.models.UserModel;
+import com.example.botos.appointment.platform.AppointmentApiResponse;
+import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
+import com.example.botos.appointment.ui.activities.userScreens.UserMainMenuActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.StringUtils;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class RegisterFinalStepActivity extends BaseActivity {
 
+    private static final String TAG = "registerFinalStep";
     private TextInputLayout mPhoneInput;
     private Button mRegisterButton;
     @Override
@@ -63,6 +72,11 @@ public class RegisterFinalStepActivity extends BaseActivity {
                 mPhoneInput.requestFocus();
                 return false;
             }
+            if (mPhoneInput.getEditText().getText().toString().contains(" ")) {
+                mPhoneInput.getEditText().setError(getResources().getString(R.string.error_invalid_phone_spaces));
+                mPhoneInput.requestFocus();
+                return false;
+            }
         }
 
         return true;
@@ -82,8 +96,62 @@ public class RegisterFinalStepActivity extends BaseActivity {
 
     private void finalResgisterRequest() {
         HashMap<String, String> params = new HashMap<>();
-//        params.put("token", token);
-//        ApiLibrary.putRequestUserModel(Constants.BASE_URL + Constants.ADD_PHONE, )
+        params.put("phone", mPhoneInput.getEditText().getText().toString());
+        params.put("name", "orice");
+
+        HashMap<String, String> header = new HashMap<>();
+        header.put("authorization", Engine.getInstance().userModel.getToken());
+        ApiLibrary.putRequestUserModel(Constants.BASE_URL + Constants.ADD_PHONE, params, header, new AppointmentApiResponse<UserModel>() {
+            @Override
+            public void onSuccess(UserModel response) {
+                Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
+                Toast.makeText(RegisterFinalStepActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
+                Engine.getInstance().userModel.setPassword(mPhoneInput.getEditText().getText().toString());
+                addToDataBase(response);
+                goToMainMenu();
+            }
+
+            @Override
+            public void onFailure() {
+                Log.d(TAG, "onFailure() called with: " + "");
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
+                Toast.makeText(RegisterFinalStepActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void addToDataBase(UserModel userModel) {
+        try {
+            getHelper().getUserModelDao().createOrUpdate(userModel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void goToMainMenu() {
+        switch (Engine.getInstance().userModel.getUserType()) {
+            case UserModel.NORMAL_USER:
+                Intent userMain = new Intent(RegisterFinalStepActivity.this, UserMainMenuActivity.class);
+                userMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(userMain);
+                break;
+            case UserModel.MEMBER:
+                Intent memberMain = new Intent(RegisterFinalStepActivity.this, UserMainMenuActivity.class);
+                memberMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(memberMain);
+                break;
+            case UserModel.ADMIN_MEMBER:
+                break;
+            case UserModel.ADMIN:
+                break;
+            default:
+                break;
+        }
+        finish();
     }
 
 }
