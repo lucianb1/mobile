@@ -58,4 +58,9 @@ public class BaseActivity extends AppCompatActivity {
     public OrmLiteHelper getHelper() {
         return mDatabaseHelper;
     }
+
+    private void setTitle(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+    }
 }

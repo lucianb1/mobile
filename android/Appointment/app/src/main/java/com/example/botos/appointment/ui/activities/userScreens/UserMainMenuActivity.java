@@ -1,5 +1,7 @@
 package com.example.botos.appointment.ui.activities.userScreens;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +9,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,6 +21,7 @@ import com.example.botos.appointment.platform.AppointmentApiResponse;
 import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.ui.activities.SigninActivity;
+import com.example.botos.appointment.ui.activities.userScreens.fragments.DomainsFragment;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
@@ -27,6 +32,7 @@ import java.util.HashMap;
 public class UserMainMenuActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "userMainMenu";
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
@@ -55,16 +61,12 @@ public class UserMainMenuActivity extends BaseActivity
         mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
+        setDefaultScreen();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+
     }
 
     @Override
@@ -89,6 +91,14 @@ public class UserMainMenuActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void setDefaultScreen() {
+        FragmentManager fragmentManager = getFragmentManager();
+        DomainsFragment newFragment = DomainsFragment.newInstance("", "");
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, newFragment,getResources().getString(R.string.domains_title)).addToBackStack(getResources().getString(R.string.domains_title)).commit();
+        setTitle(getString(R.string.domains_title));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -99,9 +109,41 @@ public class UserMainMenuActivity extends BaseActivity
             logoutRequest();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            int count = getFragmentManager().getBackStackEntryCount();
+
+            if(count > 1) {
+//                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                Fragment newFragment = null;
+//                newFragment = HomeFragment.newInstance();
+//                FragmentTransaction ft = fragmentManager.beginTransaction();
+//
+//                if (newFragment != null) {
+//                    ft.replace(R.id.container, newFragment).commit();
+//                }
+                setTitle(getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2).getName());
+                getFragmentManager().popBackStack();
+
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
+            }
+            else {
+                Log.d(TAG, "onKeyDown() called with: keyCode = [" + keyCode + "], event = [" + event + "]");
+                finish();
+                //showAlert();
+                //exit app
+            }
+        }
+        return false;
     }
 
     private void logoutRequest() {

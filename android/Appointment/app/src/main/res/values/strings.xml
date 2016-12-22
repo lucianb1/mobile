@@ -42,6 +42,13 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_member_main_menu">MemberMainMenuActivity</string>
-    <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_calendar">Calendar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="domains_title">Domeni</string>
+    <string name="companies_title">Saloane</string>
+    <string name="title_activity_company_details">CompanyDetails</string>
+    <string name="title_activity_employees">Employees</string>
 
 </resources>

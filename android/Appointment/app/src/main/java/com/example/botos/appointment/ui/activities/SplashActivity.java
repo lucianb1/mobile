@@ -6,8 +6,7 @@ import android.os.Handler;
 
 import com.example.botos.appointment.R;
 import com.example.botos.appointment.ui.BaseActivity;
-
-import java.util.List;
+import com.example.botos.appointment.ui.activities.userScreens.UserMainMenuActivity;
 
 public class SplashActivity extends BaseActivity {
 
