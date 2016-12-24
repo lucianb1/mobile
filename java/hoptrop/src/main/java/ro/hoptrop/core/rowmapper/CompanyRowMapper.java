@@ -23,6 +23,7 @@ public class CompanyRowMapper implements RowMapper<Company> {
                         .setLatitude(rs.getDouble("lat"))
                         .setLongitude(rs.getDouble("long"))
                         .build())
+                .setOrderNr(rs.getInt("order_nr"))
                 .build();
     }
 }

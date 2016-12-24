@@ -30,34 +30,33 @@ public class CompanyRepository {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public Company createCompany(String name, Location location, String membersToken) {
-        SqlQueryBuilder queryBuilder = new SqlQueryBuilder("INSERT INTO companies (name, member_token, address, coordinate) values (")
-                .append(":name,")
-                .append(":memberToken,")
-                .append(":address,")
-                .append(":coordinates)");
+    public Company createCompany(String name, Location location, String membersToken, int orderNr) {
+        String sql = "INSERT INTO companies (name, members_token, address, coordinates, order_nr) values (:name, :membersToken, :address, :coordinates, :orderNr)";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", name)
                 .addValue("memberToken", membersToken)
                 .addValue("address", location.getAddress())
-                .addValue("coordinates", location.hasCoordinates() ? SqlUtils.extractCoordinatesInSqlFormat(location) : null);
+                .addValue("coordinates", location.hasCoordinates() ? SqlUtils.extractCoordinatesInSqlFormat(location) : null)
+                .addValue("orderNr", orderNr);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(queryBuilder.toString(), params, keyHolder);
+        jdbcTemplate.update(sql, params, keyHolder);
         return this.findCompany(keyHolder.getKey().intValue());
     }
 
-    public void updateCompany(int id, String newName, Location newLocation, WeekTimetable newTimeTable) {
-        String sql = "UPDATE companies SET name = :newName, address = :newAddress, coordinates = :newCoordinates, timetable = :newTimetable";
+    public void updateCompany(int id, String newName, Location newLocation, WeekTimetable newTimeTable, int newOrderNr) {
+        String sql = "UPDATE companies SET name = :newName, address = :newAddress, coordinates = :newCoordinates, timetable = :newTimetable, order_nr = :orderNr WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
                 .addValue("newName", newName)
                 .addValue("newAddress", newLocation.getAddress())
                 .addValue("newCoordinates", newLocation.hasCoordinates() ? SqlUtils.extractCoordinatesInSqlFormat(newLocation) : null)
-                .addValue("newTimetable", JsonUtils.toJson(newTimeTable));
+                .addValue("newTimetable", JsonUtils.toJson(newTimeTable))
+                .addValue("orderNr", newOrderNr);
         jdbcTemplate.update(sql, params);
     }
 
     public void updateCompanyMembersToken(int id, String newToken) {
-        String sql = "UPDATE companies SET members_token = :token where id = :id";
+        String sql = "UPDATE companies SET members_token = :token WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id)
                 .addValue("token", newToken);
@@ -98,9 +97,18 @@ public class CompanyRepository {
     }
 
     public boolean membersTokenExist(String token) {
-        String sql = "SELECT count(id) FROM companies WHERE member_token = :token";
+        String sql = "SELECT count(id) FROM companies WHERE members_token = :token";
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("token", token);
         return jdbcTemplate.queryForObject(sql, params, Integer.class) > 0;
+    }
+
+    public String getMemberAdminToken(int companyID) {
+        String sql = "SELECT member_admin_token FROM companies WHERE id = :id";
+        try {
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource().addValue("id", companyID), String.class);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException();
+        }
     }
 
 

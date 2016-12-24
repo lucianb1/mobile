@@ -31,8 +31,9 @@ CREATE TABLE IF NOT EXISTS companies (
     id SMALLINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     address VARCHAR(100) NOT NULL,
+    members_token VARCHAR(10) NOT NULL,
+    member_admin_token VARCHAR(10) NOT NULL,
     coordinates POINT,
-    image BLOB,
     order_nr SMALLINT NOT NULL DEFAULT 0,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -48,12 +49,13 @@ CREATE TABLE IF NOT EXISTS members (
     account_id INT NOT NULL,
     company_id SMALLINT NOT NULL,
     name varchar(30) NOT NULL,
-    image BLOB,
+    is_active BIT NOT NULL DEFAULT 0,
     order_nr SMALLINT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS member_services (
     id TINYINT PRIMARY KEY AUTO_INCREMENT,
+    domain_id SMALLINT NOT NULL
     name VARCHAR(50) NOT NULL,
     duration TINYINT NOT NULL, -- in quarters
     order_nr TINYINT NOT NULL DEFAULT 0

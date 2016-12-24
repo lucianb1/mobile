@@ -9,12 +9,13 @@ public class CompanyBuilder {
     private String name;
     private String membersToken;
     private Location location;
+    private int orderNr;
 
     CompanyBuilder() {
     }
 
     public Company build() {
-        return new Company(id, name, membersToken, location);
+        return new Company(id, name, membersToken, location, orderNr);
     }
 
     public CompanyBuilder setId(int id) {
@@ -34,6 +35,11 @@ public class CompanyBuilder {
 
     public CompanyBuilder setLocation(Location location) {
         this.location = location;
+        return this;
+    }
+
+    public CompanyBuilder setOrderNr(int orderNr) {
+        this.orderNr = orderNr;
         return this;
     }
 }

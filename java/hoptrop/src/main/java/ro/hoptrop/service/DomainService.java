@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface DomainService {
     List<CompanyDomain> getAllCompanyDomains();
+
+    void createCompanyDomain(String name, int orderNr);
 }

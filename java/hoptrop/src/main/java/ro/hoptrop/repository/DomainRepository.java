@@ -1,6 +1,7 @@
 package ro.hoptrop.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ro.hoptrop.core.rowmapper.CompanyDomainRowMapper;
@@ -22,6 +23,14 @@ public class DomainRepository {
     public List<CompanyDomain> getAllCompaniesDomains() {
         String sql = "SELECT * FROM company_domains order by order_nr";
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public void createCompanyDomain(String name, int orderNr) {
+        String sql = "INSERT INTO company_domains (name, order_nr) VALUES (:name, :orderNr)";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", name)
+                .addValue("orderNr", orderNr);
+        jdbcTemplate.update(sql, params);
     }
 
 //    public List<Integer> getDomainsForCompany(int companyID) {

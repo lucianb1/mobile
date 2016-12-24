@@ -1,5 +1,6 @@
 package ro.hoptrop.service.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import ro.hoptrop.service.AccountService;
  */
 @Service
 public class AccountServiceImpl implements AccountService {
+    private static final Logger LOG = Logger.getLogger(AccountServiceImpl.class);
+
 
     @Autowired
     private AccountRepository accountRepository;
@@ -23,12 +26,12 @@ public class AccountServiceImpl implements AccountService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Account registerAccount(String email, String password, String name, String phone, AccountType type) throws AlreadyExistsException {
+    public Account registerUser(String email, String password, String name, String phone) throws AlreadyExistsException {
         try {
             accountRepository.findAccount(email);
             throw new AlreadyExistsException("Email already used");
         } catch (NotFoundException e) { // the email is not used yet
-            return accountRepository.createAccount(email, passwordEncoder.encode(password), name, phone, type);
+            return accountRepository.createAccount(email, passwordEncoder.encode(password), name, phone, AccountType.USER);
         }
     }
 

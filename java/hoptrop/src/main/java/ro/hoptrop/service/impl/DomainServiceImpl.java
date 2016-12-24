@@ -22,4 +22,9 @@ public class DomainServiceImpl implements DomainService{
         return domainRepository.getAllCompaniesDomains();
     }
 
+    @Override
+    public void createCompanyDomain(String name, int orderNr) {
+        domainRepository.createCompanyDomain(name, orderNr);
+    }
+
 }

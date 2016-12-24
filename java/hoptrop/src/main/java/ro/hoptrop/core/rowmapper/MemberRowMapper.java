@@ -18,6 +18,7 @@ public class MemberRowMapper implements RowMapper<Member> {
                 .setAccountID(rs.getInt("accountID"))
                 .setCompanyID(rs.getInt("company_id"))
                 .setName(rs.getString("name"))
+                .setIsActive(rs.getBoolean("is_active"))
                 .build();
     }
 }
