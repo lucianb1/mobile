@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ro.hoptrop.core.exceptions.AlreadyExistsException;
 import ro.hoptrop.model.account.Account;
-import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.AccountService;
 import ro.hoptrop.service.AuthenticationService;
@@ -38,7 +37,7 @@ public class AccountController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public MobileLoginResponse register(@Valid @RequestBody RegisterRequest request) throws AlreadyExistsException {
-        Account registeredAccount = accountService.registerUser(request.getEmail(), request.getPassword(), request.getName(), request.getPhone(), AccountType.USER);
+        Account registeredAccount = accountService.registerUser(request.getEmail(), request.getPassword(), request.getName(), request.getPhone());
         return authenticationService.loginAccount(registeredAccount);
     }
 

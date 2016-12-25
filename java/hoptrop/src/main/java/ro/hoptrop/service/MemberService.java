@@ -14,8 +14,6 @@ public interface MemberService {
 
     List<Member> getMembersForCompany(int companyID);
 
-    List<Member> getActiveMembersForCompany(int companyID);
-
     List<MemberFeature> getMemberServices(int memberID, int domainID);
 
     void updateMemberServices(int memberID, List<UpdateMemberServiceRequest> request);
