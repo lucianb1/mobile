@@ -6,12 +6,11 @@ public class MemberBuilder {
 	private int accountID;
 	private int companyID;
 	private String name;
-	private boolean isActive;
 
 	MemberBuilder() {}
 
 	public Member build() {
-		return new Member(id, accountID, companyID, name, isActive);
+		return new Member(id, accountID, companyID, name);
 	}
 	
 	public MemberBuilder setId(int id) {
@@ -34,8 +33,4 @@ public class MemberBuilder {
 		return this;
 	}
 
-	public MemberBuilder setIsActive(boolean active) {
-		isActive = active;
-		return this;
-	}
 }

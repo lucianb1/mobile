@@ -27,7 +27,8 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
+	//TODO if remove this...
 	@Autowired
 	private AuthenticationService authenticationService;
 	
@@ -44,7 +45,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 	     web.ignoring()
-	        .antMatchers("/mobile/login/**", "/mobile/forgotpassword", "/account/register");
+	        .antMatchers("/mobile/login/**", "/mobile/forgotpassword", "/account/register", "/generator");
 	}
 	
 	@Override

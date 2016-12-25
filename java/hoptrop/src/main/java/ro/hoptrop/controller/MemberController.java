@@ -33,12 +33,6 @@ public class MemberController {
         return memberService.getMembersForCompany(companyID).stream().map(item -> mapToMemberResponse(item)).collect(Collectors.toList());
     }
 
-    //TODO this should be allowed only for group members
-    @RequestMapping(value = "/company/{companyID}/active", method = RequestMethod.GET)
-    public List<MemberJsonResponse> getActiveMembersForCompany(@PathVariable int companyID) {
-        return memberService.getActiveMembersForCompany(companyID).stream().map(item -> mapToMemberResponse(item)).collect(Collectors.toList());
-    }
-
     @RequestMapping(value = "/{memberID}/domain/{domainID}/services", method = RequestMethod.GET)
     public List<MemberFeatureJsonResponse> getMemberServices(@PathVariable int memberID, @PathVariable int domainID) {
         return memberService.getMemberServices(memberID, domainID).stream().map(item -> MemberFeatureJsonResponse.from(item)).collect(Collectors.toList());

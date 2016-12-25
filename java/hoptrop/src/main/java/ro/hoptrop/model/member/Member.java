@@ -6,14 +6,12 @@ public class Member {
     private final int accountID;
     private final int companyID;
     private final String name;
-    private final boolean isActive;
 
-    Member(int id, int accountID, int companyID, String name, boolean isActive) {
+    Member(int id, int accountID, int companyID, String name) {
         this.id = id;
         this.accountID = accountID;
         this.companyID = companyID;
         this.name = name;
-        this.isActive = isActive;
     }
 
     public static MemberBuilder builder() {
@@ -45,7 +43,4 @@ public class Member {
         return name;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
 }

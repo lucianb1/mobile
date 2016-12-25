@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS members (
     account_id INT NOT NULL,
     company_id SMALLINT NOT NULL,
     name varchar(30) NOT NULL,
-    is_active BIT NOT NULL DEFAULT 0,
     order_nr SMALLINT NOT NULL DEFAULT 0
 );
 

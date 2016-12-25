@@ -41,10 +41,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findMembersByCompany(companyID);
     }
 
-    @Override
-    public List<Member> getActiveMembersForCompany(int companyID) {
-        return memberRepository.findActiveMembersByCompany(companyID);
-    }
 
     @Override
     public List<MemberFeature> getMemberServices(int memberID, int domainID) {
