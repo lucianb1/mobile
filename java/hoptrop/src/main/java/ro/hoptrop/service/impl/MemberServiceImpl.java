@@ -28,10 +28,10 @@ public class MemberServiceImpl implements MemberService {
     private CompanyRepository companyRepository;
 
     @Autowired
-    private MemberTokenRepository memberTokenRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberTokenRepository memberTokenRepository;
 
     @Autowired
     private TimetableRepository timetableRepository;
@@ -64,9 +64,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member registerByToken(int accountID, String token) {
-        MemberToken memberToken = memberTokenRepository.findByToken(token);
         Account account = accountRepository.findAccount(accountID);
         if (AccountType.USER.equals(account.getType())) {
+            MemberToken memberToken = memberTokenRepository.findByToken(token);
             AccountType newType = memberToken.isAdmin() ? AccountType.MEMBER_ADMIN : AccountType.MEMBER;
             accountRepository.updateAccountType(accountID, newType);
             return memberRepository.createMember(accountID, memberToken.getCompanyID(), account.getName());
@@ -78,9 +78,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void setDefaultTimetable(int memberID, short[][] hours) {
+    public void createDefaultTimetable(int memberID, short[][] hours) {
+        timetableRepository.createDefaultTimetable(memberID, hours);
+//        memberRepository.activateMember(memberID);
+        //TODO set some flag
+    }
+
+    @Override
+    public void updateDefaultTimetable(int memberID, short[][] hours) {
         timetableRepository.updateDefaultTimetable(memberID, hours);
-        memberRepository.activateMember(memberID);
     }
 
     @Override

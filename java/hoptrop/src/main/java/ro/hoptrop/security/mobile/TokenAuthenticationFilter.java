@@ -1,10 +1,7 @@
 package ro.hoptrop.security.mobile;
 
 import org.apache.log4j.Logger;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.GenericFilterBean;
@@ -25,7 +22,7 @@ public class TokenAuthenticationFilter extends GenericFilterBean {
 
 	private static final Logger LOG = Logger.getLogger(TokenAuthenticationFilter.class);
 
-	private AuthenticationManager authenticationManager;
+//	private AuthenticationManager authenticationManager;
 
 	private AuthenticationEntryPoint entryPoint;
 
@@ -51,20 +48,20 @@ public class TokenAuthenticationFilter extends GenericFilterBean {
 			tokenAuthentication.setAuthenticated(true);
 			tokenAuthentication.setToken(token);
 			tokenAuthentication.setPrincipal(principal);
-			final Authentication auth = authenticationManager.authenticate(tokenAuthentication);
+//			final Authentication auth = authenticationManager.authenticate(tokenAuthentication);
 
-			SecurityContextHolder.getContext().setAuthentication(auth);
+			SecurityContextHolder.getContext().setAuthentication(tokenAuthentication);
 			chain.doFilter(request, response);
-		} catch (EmptyResultDataAccessException e) {
+		} catch (Exception e) {
 			LOG.info("Exception occurred while trying to login user based on token: " + e.getMessage());
 			entryPoint.commence(httpServletRequest, httpServletResponse, new MobileAuthenticationException("Cannot authenticate"));
 		}
 	}
 
-	public TokenAuthenticationFilter setAuthenticationManager(AuthenticationManager authenticationManager) {
-		this.authenticationManager = authenticationManager;
-		return this;
-	}
+//	public TokenAuthenticationFilter setAuthenticationManager(AuthenticationManager authenticationManager) {
+//		this.authenticationManager = authenticationManager;
+//		return this;
+//	}
 
 	public TokenAuthenticationFilter setEntryPoint(AuthenticationEntryPoint entryPoint) {
 		this.entryPoint = entryPoint;

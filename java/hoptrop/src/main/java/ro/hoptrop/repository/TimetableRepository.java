@@ -36,6 +36,7 @@ public class TimetableRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("memberID", memberID)
                 .addValue("timetable", WeekTimetableSerializer.serialize(timetable));
+        jdbcTemplate.update(sql ,params);
     }
 
     public void updateDefaultTimetable(int memberID, short[][] timetable) {

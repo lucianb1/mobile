@@ -1,15 +1,17 @@
-package ro.hoptrop.security.mobile;
+package ro.hoptrop.config;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ro.hoptrop.security.mobile.RestAuthenticationEntryPoint;
+import ro.hoptrop.security.mobile.TokenAuthenticationFilter;
+import ro.hoptrop.security.mobile.TokenAuthenticationProvider;
 import ro.hoptrop.service.AuthenticationService;
 
 import javax.servlet.Filter;
@@ -25,8 +27,8 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private TokenAuthenticationProvider provider;
 	
-	@Autowired
-	private AuthenticationManager authenticationManager;
+//	@Autowired
+//	private AuthenticationManager authenticationManager;
 
 	//TODO if remove this...
 	@Autowired
@@ -45,7 +47,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 	     web.ignoring()
-	        .antMatchers("/mobile/login/**", "/mobile/forgotpassword", "/account/register", "/generator");
+	        .antMatchers("/mobile/login/**", "/mobile/forgotpassword/**", "/account/register", "/generator/**");
 	}
 	
 	@Override
@@ -71,7 +73,7 @@ public class MobileSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	public Filter getAuthTokenFilter() {
 		return new TokenAuthenticationFilter()
-			.setAuthenticationManager(authenticationManager)
+//			.setAuthenticationManager(authenticationManager)
 			.setEntryPoint(restAuthenticationEntryPoint)
 			.setAuthenticationService(authenticationService);
 	}

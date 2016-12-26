@@ -2,6 +2,7 @@ package ro.hoptrop.service;
 
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
+import ro.hoptrop.model.token.member.MemberToken;
 
 import java.util.List;
 import java.util.Set;
@@ -23,5 +24,7 @@ public interface CompanyService {
 
     String regenerateMembersToken(int companyID);
 
-    String getMemberAdminToken(int companyID);
+    MemberToken getMemberAdminToken(int companyID);
+
+    MemberToken getMembersToken(int companyID);
 }

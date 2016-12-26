@@ -5,6 +5,8 @@ package ro.hoptrop.model.timetable;
  */
 public class WeekTimetableSerializer {
 
+    private static final int ROWS = 7;
+    private static final int COLUMNS = 4 * 24;
 
     public static byte[] serialize(short[][] timetable) {
         return null;

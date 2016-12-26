@@ -17,6 +17,7 @@ import ro.hoptrop.utils.JsonUtils;
 import ro.hoptrop.utils.SqlUtils;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Luci on 12-Dec-16.
@@ -25,31 +26,42 @@ import java.util.List;
 public class CompanyRepository {
 
     private static final CompanyRowMapper rowMapper = new CompanyRowMapper();
-    private static final String SELECT_CLAUSE = "SELECT c.id, c.name, x(c.coordinates) AS long, y(c.coordinates) AS lat, c.address FROM companies c ";
+    private static final String SELECT_CLAUSE = "SELECT c.id, c.name, X(c.coordinates) AS lon, Y(c.coordinates) AS lat, c.address, order_nr FROM companies c ";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public Company createCompany(String name, Location location, String membersToken, int orderNr) {
-        String sql = "INSERT INTO companies (name, members_token, address, coordinates, order_nr) values (:name, :membersToken, :address, :coordinates, :orderNr)";
+    public Company createCompany(String name, Location location, int orderNr) {
+        String sql = "INSERT INTO companies (name, address, coordinates, order_nr) values (:name, :address, GeomFromText(:coordinates), :orderNr)";
+        String geometryParam = location.hasCoordinates() ? SqlUtils.createPointFromLocation(location.getLongitude(), location.getLatitude()) : null;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", name)
-                .addValue("memberToken", membersToken)
                 .addValue("address", location.getAddress())
-                .addValue("coordinates", location.hasCoordinates() ? SqlUtils.extractCoordinatesInSqlFormat(location) : null)
+                .addValue("coordinates", geometryParam)
                 .addValue("orderNr", orderNr);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, params, keyHolder);
         return this.findCompany(keyHolder.getKey().intValue());
     }
 
+    public void setCompanyDomains(int companyID, Set<Integer> domains) {
+        String sql = "INSERT INTO companies_to_domains (company_id, domain_id) VALUES (:companyID, :domainID)";
+        MapSqlParameterSource[] params = domains.stream()
+                .map(item -> new MapSqlParameterSource()
+                        .addValue("companyID", companyID)
+                        .addValue("domainID", item))
+                .toArray(MapSqlParameterSource[]::new);
+        jdbcTemplate.batchUpdate(sql, params);
+    }
+
     public void updateCompany(int id, String newName, Location newLocation, WeekTimetable newTimeTable, int newOrderNr) {
-        String sql = "UPDATE companies SET name = :newName, address = :newAddress, coordinates = :newCoordinates, timetable = :newTimetable, order_nr = :orderNr WHERE id = :id";
+        String sql = "UPDATE companies SET name = :newName, address = :newAddress, coordinates = GeomFromText(:newCoordinates), timetable = :newTimetable, order_nr = :orderNr WHERE id = :id";
+        String geometryParam = newLocation.hasCoordinates() ? SqlUtils.createPointFromLocation(newLocation.getLongitude(), newLocation.getLatitude()) : null;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id)
                 .addValue("newName", newName)
                 .addValue("newAddress", newLocation.getAddress())
-                .addValue("newCoordinates", newLocation.hasCoordinates() ? SqlUtils.extractCoordinatesInSqlFormat(newLocation) : null)
+                .addValue("newCoordinates", geometryParam)
                 .addValue("newTimetable", JsonUtils.toJson(newTimeTable))
                 .addValue("orderNr", newOrderNr);
         jdbcTemplate.update(sql, params);
@@ -84,16 +96,6 @@ public class CompanyRepository {
                 .addValue("name", name)
                 .addValue("domainID", domainID);
         return jdbcTemplate.query(builder.toString(), params, rowMapper);
-    }
-
-    public int findCompanyIdByMembersToken(String token) {
-        String sql = "SELECT id FROM companies WHERE member_token = :token";
-        MapSqlParameterSource params = new MapSqlParameterSource().addValue("token", token);
-        try {
-            return jdbcTemplate.queryForObject(sql, params, Integer.class);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException();
-        }
     }
 
     public boolean membersTokenExist(String token) {

@@ -25,7 +25,7 @@ public class MemberRepository {
 
     private static final MemberRowMapper memberRowMapper = new MemberRowMapper();
     private static final MemberFeatureRowMapper featureRowMapper = new MemberFeatureRowMapper();
-    private static final String SELECT_MEMBER_QUERY = "SELECT m.id, m.name from members m ";
+    private static final String SELECT_MEMBER_QUERY = "SELECT m.id, m.company_id, m.account_id, m.name from members m ";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -40,11 +40,6 @@ public class MemberRepository {
         String sql = SELECT_MEMBER_QUERY + "WHERE company_id = :companyID AND is_active = 1 order by order_nr";
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("companyID", companyID);
         return jdbcTemplate.query(sql, params, memberRowMapper);
-    }
-
-    public void activateMember(int memberID) {
-        String sql = "UPDATE members SET is_active = 1 WHERE id = :id";
-        jdbcTemplate.update(sql, new MapSqlParameterSource().addValue("id", memberID));
     }
 
     public Member createMember(int accountID, int companyID, String name) {
@@ -80,11 +75,12 @@ public class MemberRepository {
      * Update only if they belong to the member
      */
     public void updateMemberServices(int memberID, List<UpdateMemberServiceRequest> request) {
-        String sql = "UPDATE member_services SET name = :name, order_nr = :orderNr, domain_id = domainID WHERE id = :id AND member_id = :memberID";
+        String sql = "UPDATE member_services SET name = :name, order_nr = :orderNr, duration = :duration, domain_id = domainID WHERE id = :id AND member_id = :memberID";
         MapSqlParameterSource[] params = request.stream()
                 .map(item -> new MapSqlParameterSource()
                         .addValue("id", item.getId())
                         .addValue("memberID", memberID)
+                        .addValue("duration", item.getDuration())
                         .addValue("orderNr", item.getOrderNr())
                         .addValue("domainID", item.getDomainID()))
                 .toArray(MapSqlParameterSource[]::new);
@@ -92,11 +88,12 @@ public class MemberRepository {
     }
 
     public void createMemberServices(int memberID, List<CreateMemberServiceRequest> request) {
-        String sql = "INSERT INTO member_services (name, member_id, order_nr, domain_id) values (:name, :memberID, :orderNr, :domainID)";
+        String sql = "INSERT INTO member_services (name, member_id, duration, order_nr, domain_id) values (:name, :memberID, :duration, :orderNr, :domainID)";
         MapSqlParameterSource[] params = request.stream()
                 .map(item -> new MapSqlParameterSource()
                         .addValue("name", item.getName())
                         .addValue("memberID", memberID)
+                        .addValue("duration", item.getDuration())
                         .addValue("orderNr", item.getOrderNr())
                         .addValue("domainID", item.getDomainID()))
                 .toArray(MapSqlParameterSource[]::new);

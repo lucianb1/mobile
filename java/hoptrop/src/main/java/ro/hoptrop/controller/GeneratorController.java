@@ -12,6 +12,7 @@ import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
 import ro.hoptrop.model.member.Member;
+import ro.hoptrop.model.token.member.MemberToken;
 import ro.hoptrop.service.AccountService;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.service.DomainService;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  * Created by Luci on 24-Dec-16.
  */
 @RestController
+@RequestMapping("/generator")
 public class GeneratorController {
     private static final Logger LOG = Logger.getLogger(GeneratorController.class);
     private static final Random random = new Random();
@@ -38,8 +40,9 @@ public class GeneratorController {
     private CompanyService companyService;
 
 
-    @RequestMapping(value = "/generator/{users}/companies", method = RequestMethod.GET)
+    @RequestMapping(value = "/{users}/{companies}", method = RequestMethod.GET)
     public void generate(@PathVariable int users, @PathVariable int companies) {
+        createDomains();
         createUsers(users, AccountType.USER);
         createCompanies(companies);
     }
@@ -60,13 +63,15 @@ public class GeneratorController {
 
     private Account createUser() {
         String password = RandomStringUtils.randomAlphanumeric(6);
-        String email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphanumeric(3) + ".com";
+        String email = RandomStringUtils.randomAlphabetic(5).toLowerCase() + "@" + RandomStringUtils.randomAlphanumeric(3).toLowerCase() + ".com";
         try {
-            return accountService.registerUser(email, password, RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomNumeric(6));
+            Account account = accountService.registerUser(email, password, RandomStringUtils.randomAlphabetic(10).toLowerCase(), RandomStringUtils.randomNumeric(6));
+            LOG.info(String.format("=====> Password for '%s' is '%s'", email, password));
+            return account;
         } catch (Exception e) {
             LOG.info("Some exception", e);
         }
-        LOG.info(String.format("=====> Password for '%s' is '%is'", email, password));
+
         return null;
     }
 
@@ -78,14 +83,16 @@ public class GeneratorController {
             Account user1 = createUser();
             Account user2 = createUser();
 
-            Member member1 = memberService.registerByToken(user1.getId(), newCompany.getMembersToken());
-            Member member2 = memberService.registerByToken(user2.getId(), newCompany.getMembersToken());
+            MemberToken membersToken = companyService.getMembersToken(newCompany.getId());
+            LOG.info("Members:");
+            Member member1 = memberService.registerByToken(user1.getId(), membersToken.getToken());
+            Member member2 = memberService.registerByToken(user2.getId(), membersToken.getToken());
 
             memberService.createMemberServices(member1.getId(), createServicesRequest(domain));
             memberService.createMemberServices(member2.getId(), createServicesRequest(domain));
 
-            memberService.setDefaultTimetable(member1.getId(), createDefeaultTimetable());
-            memberService.setDefaultTimetable(member2.getId(), createDefeaultTimetable());
+            memberService.createDefaultTimetable(member1.getId(), createDefeaultTimetable());
+            memberService.createDefaultTimetable(member2.getId(), createDefeaultTimetable());
             //TODO set timetable for activation
         }
     }
@@ -99,7 +106,7 @@ public class GeneratorController {
     }
 
     private String randomString(int length) {
-        return RandomStringUtils.randomAlphabetic(length);
+        return RandomStringUtils.randomAlphabetic(length).toLowerCase();
     }
 
     private static double randomLongitude() {
@@ -124,13 +131,14 @@ public class GeneratorController {
         request.setName(randomString(10));
         request.setDomainID(domainID);
         request.setOrderNr(0);
+        request.setDuration(random.nextInt(5) + 1);
         return request;
     }
 
     private short[][] createDefeaultTimetable() {
         short[][] array = new short[7][96];
         for (int i = 0; i < 5; i++) {
-            for (int j = 36; j < 76; i++) {
+            for (int j = 36; j < 76; j++) {
                 array[i][j] = 1;
             }
         }

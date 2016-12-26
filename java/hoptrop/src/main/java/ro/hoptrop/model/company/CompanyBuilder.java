@@ -7,7 +7,6 @@ public class CompanyBuilder {
 
     private int id;
     private String name;
-    private String membersToken;
     private Location location;
     private int orderNr;
 
@@ -15,7 +14,7 @@ public class CompanyBuilder {
     }
 
     public Company build() {
-        return new Company(id, name, membersToken, location, orderNr);
+        return new Company(id, name, location, orderNr);
     }
 
     public CompanyBuilder setId(int id) {
@@ -25,11 +24,6 @@ public class CompanyBuilder {
 
     public CompanyBuilder setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public CompanyBuilder setMembersToken(String membersToken) {
-        this.membersToken = membersToken;
         return this;
     }
 

@@ -8,8 +8,17 @@ params:
     maximumPoolSize: 15
     initialize: true
     
-    
+management:
+  security:
+    enabled: false
+
+security:
+  basic:
+    enabled: false
+
 spring:
+  jmx:
+    enabled: false
   mail:
     host: smtp.gmail.com
     port: 587
@@ -26,3 +35,4 @@ spring:
 facebook:
   appID: 1150054408414271
   appSecret: 7a8affaa11a316777a3d0243cfba25d9
+

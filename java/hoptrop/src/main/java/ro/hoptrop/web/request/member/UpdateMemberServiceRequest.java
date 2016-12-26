@@ -21,6 +21,9 @@ public class UpdateMemberServiceRequest {
     @NotNull
     private Integer domainID;
 
+    @NotNull
+    private Integer duration;
+
     public String getName() {
         return name;
     }
@@ -51,5 +54,13 @@ public class UpdateMemberServiceRequest {
 
     public void setDomainID(Integer domainID) {
         this.domainID = domainID;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 }

@@ -15,7 +15,7 @@ public class MemberRowMapper implements RowMapper<Member> {
     public Member mapRow(ResultSet rs, int i) throws SQLException {
         return Member.builder()
                 .setId(rs.getInt("id"))
-                .setAccountID(rs.getInt("accountID"))
+                .setAccountID(rs.getInt("account_id"))
                 .setCompanyID(rs.getInt("company_id"))
                 .setName(rs.getString("name"))
                 .build();

@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
+import ro.hoptrop.model.token.member.MemberToken;
 import ro.hoptrop.repository.CompanyRepository;
+import ro.hoptrop.repository.MemberTokenRepository;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.utils.TokenUtils;
+import ro.hoptrop.web.request.member.CreateMemberTokenRequest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -20,9 +24,20 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private MemberTokenRepository memberTokenRepository;
+
     @Override
     public Company createCompany(String name, Location location, Set<Integer> domains, int orderNr) {
-        return null;
+        //TODO check unique name
+        Company company = companyRepository.createCompany(name, location, orderNr);
+        memberTokenRepository.createMemberTokens(Arrays.asList(
+                new CreateMemberTokenRequest().setCompanyID(company.getId()).setToken(TokenUtils.generateMembersToken()).setIsAdmin(false), // members
+                new CreateMemberTokenRequest().setCompanyID(company.getId()).setToken(TokenUtils.generateMembersToken()).setIsAdmin(true) // admin
+        ));
+        //TODO validate domains actually exists
+        companyRepository.setCompanyDomains(company.getId(), domains);
+        return company;
     }
 
     @Override
@@ -56,7 +71,12 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public String getMemberAdminToken(int companyID) {
-        return companyRepository.getMemberAdminToken(companyID);
+    public MemberToken getMemberAdminToken(int companyID) {
+        return memberTokenRepository.getMemberAdminTokenForCompany(companyID);
+    }
+
+    @Override
+    public MemberToken getMembersToken(int companyID) {
+        return memberTokenRepository.getMembersTokenForCompany(companyID);
     }
 }

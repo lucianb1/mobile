@@ -1,6 +1,6 @@
---drop database mobile;
---create database mobile;
---use mobile;
+drop database mobile;
+create database mobile;
+use mobile;
 
 
 CREATE TABLE IF NOT EXISTS accounts (
@@ -31,11 +31,16 @@ CREATE TABLE IF NOT EXISTS companies (
     id SMALLINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     address VARCHAR(100) NOT NULL,
-    members_token VARCHAR(10) NOT NULL,
-    member_admin_token VARCHAR(10) NOT NULL,
     coordinates POINT,
     order_nr SMALLINT NOT NULL DEFAULT 0,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS member_tokens (
+    id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+    company_id SMALLINT NOT NULL,
+    token VARCHAR(20) NOT NULL,
+    is_admin BIT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS companies_to_domains (
@@ -54,7 +59,8 @@ CREATE TABLE IF NOT EXISTS members (
 
 CREATE TABLE IF NOT EXISTS member_services (
     id TINYINT PRIMARY KEY AUTO_INCREMENT,
-    domain_id SMALLINT NOT NULL
+    domain_id SMALLINT NOT NULL,
+    member_id SMALLINT NOT NULL,
     name VARCHAR(50) NOT NULL,
     duration TINYINT NOT NULL, -- in quarters
     order_nr TINYINT NOT NULL DEFAULT 0

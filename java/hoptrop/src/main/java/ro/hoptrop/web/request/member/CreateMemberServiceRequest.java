@@ -18,6 +18,9 @@ public class CreateMemberServiceRequest {
     @NotNull
     private Integer domainID;
 
+    @NotNull
+    private Integer duration;
+
     public String getName() {
         return name;
     }
@@ -40,5 +43,13 @@ public class CreateMemberServiceRequest {
 
     public void setDomainID(Integer domainID) {
         this.domainID = domainID;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 }

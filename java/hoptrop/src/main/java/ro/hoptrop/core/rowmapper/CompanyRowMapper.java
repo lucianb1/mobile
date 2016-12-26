@@ -17,11 +17,10 @@ public class CompanyRowMapper implements RowMapper<Company> {
         return Company.builder()
                 .setId(rs.getInt("id"))
                 .setName(rs.getString("name"))
-                .setMembersToken(rs.getString("members_token"))
                 .setLocation(Location.builder()
                         .setAddress(rs.getString("address"))
                         .setLatitude(rs.getDouble("lat"))
-                        .setLongitude(rs.getDouble("long"))
+                        .setLongitude(rs.getDouble("lon"))
                         .build())
                 .setOrderNr(rs.getInt("order_nr"))
                 .build();

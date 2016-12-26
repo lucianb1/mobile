@@ -7,14 +7,12 @@ public class Company {
 
     private final int id;
     private final String name;
-    private final String membersToken;
     private final Location location;
     private final int orderNr;
 
-    Company(int id, String name, String membersToken, Location location, int orderNr) {
+    Company(int id, String name, Location location, int orderNr) {
         this.id = id;
         this.name = name;
-        this.membersToken = membersToken;
         this.location = location;
         this.orderNr = orderNr;
     }
@@ -35,9 +33,6 @@ public class Company {
         return location;
     }
 
-    public String getMembersToken() {
-        return membersToken;
-    }
 
     public int getOrderNr() {
         return orderNr;
