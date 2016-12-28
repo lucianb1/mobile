@@ -1,4 +1,4 @@
-package ro.hoptrop.core.rowmapper;
+package ro.hoptrop.repository.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ro.hoptrop.model.domain.CompanyDomain;

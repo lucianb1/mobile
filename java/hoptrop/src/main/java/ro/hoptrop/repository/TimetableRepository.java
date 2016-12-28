@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ro.hoptrop.core.exceptions.NotFoundException;
-import ro.hoptrop.core.rowmapper.WeekTimetableRowMapper;
+import ro.hoptrop.repository.rowmapper.WeekTimetableRowMapper;
 import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.model.timetable.WeekTimetableSerializer;
 

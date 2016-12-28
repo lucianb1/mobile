@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ro.hoptrop.core.exceptions.NotFoundException;
-import ro.hoptrop.core.rowmapper.AccountRowMapper;
+import ro.hoptrop.repository.rowmapper.AccountRowMapper;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
 

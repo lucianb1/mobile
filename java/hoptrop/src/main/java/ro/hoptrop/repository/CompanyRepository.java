@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ro.hoptrop.core.exceptions.NotFoundException;
-import ro.hoptrop.core.rowmapper.CompanyRowMapper;
+import ro.hoptrop.repository.rowmapper.CompanyRowMapper;
 import ro.hoptrop.core.sql.SqlQueryBuilder;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
@@ -87,13 +87,13 @@ public class CompanyRepository {
 
     public List<Company> findCompaniesByNameAndDomain(int domainID, String name) {
         SqlQueryBuilder builder = new SqlQueryBuilder(SELECT_CLAUSE)
-                .append("inner join company_to_domains cd on c.id = cd.company_id ")
-                .append("inner join company_domains d on cd.domain_id = d.id ")
+                .append("INNER JOIN company_to_domains cd ON c.id = cd.company_id ")
+                .append("INNER JOIN company_domains d oON cd.domain_id = d.id ")
                 .append("WHERE d.id = :domainID ")
-                .conditionalAppend(name != null, "AND c.name LOWER(c.name) like %:name%");
+                .conditionalAppend(name != null, "AND LOWER(c.name) like %:name%");
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", name)
+                .addValue("name", name != null ? name.toLowerCase() : null)
                 .addValue("domainID", domainID);
         return jdbcTemplate.query(builder.toString(), params, rowMapper);
     }

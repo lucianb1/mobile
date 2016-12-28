@@ -1,4 +1,4 @@
-package ro.hoptrop.core.rowmapper;
+package ro.hoptrop.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ro.hoptrop.core.exceptions.NotFoundException;
-import ro.hoptrop.core.rowmapper.MemberTokenRowMapper;
+import ro.hoptrop.repository.rowmapper.MemberTokenRowMapper;
 import ro.hoptrop.model.token.member.MemberToken;
 import ro.hoptrop.web.request.member.CreateMemberTokenRequest;
 

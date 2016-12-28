@@ -1,4 +1,4 @@
-package ro.hoptrop.core.rowmapper;
+package ro.hoptrop.repository.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ro.hoptrop.model.company.Company;
@@ -19,8 +19,8 @@ public class CompanyRowMapper implements RowMapper<Company> {
                 .setName(rs.getString("name"))
                 .setLocation(Location.builder()
                         .setAddress(rs.getString("address"))
-                        .setLatitude(rs.getDouble("lat"))
-                        .setLongitude(rs.getDouble("lon"))
+                        .setLatitude((Double) rs.getObject("lat"))
+                        .setLongitude((Double) rs.getObject("lon"))
                         .build())
                 .setOrderNr(rs.getInt("order_nr"))
                 .build();

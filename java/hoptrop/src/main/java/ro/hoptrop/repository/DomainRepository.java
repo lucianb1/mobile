@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ro.hoptrop.core.rowmapper.CompanyDomainRowMapper;
+import ro.hoptrop.repository.rowmapper.CompanyDomainRowMapper;
 import ro.hoptrop.model.domain.CompanyDomain;
 
 import java.util.List;
