@@ -80,11 +80,11 @@ public class GeneratorController {
         for (int i = 0; i < count; i++) {
             Integer domain = companyDomains.get(random.nextInt(companyDomains.size()));
             Company newCompany = companyService.createCompany(randomString(6), generateRandomLocation(), new HashSet<>(Arrays.asList(domain)), 0);
+            LOG.info("Members:");
             Account user1 = createUser();
             Account user2 = createUser();
 
             MemberToken membersToken = companyService.getMembersToken(newCompany.getId());
-            LOG.info("Members:");
             Member member1 = memberService.registerByToken(user1.getId(), membersToken.getToken());
             Member member2 = memberService.registerByToken(user2.getId(), membersToken.getToken());
 
