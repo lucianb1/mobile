@@ -247,7 +247,7 @@ public class ApiLibrary {
         }
     }
 
-    public static void putRequestUserModel(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<UserModel> responseApi) {
+    public static void putRequestString(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<String> responseApi) {
         DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
             @Override
             public void run() {
@@ -265,7 +265,7 @@ public class ApiLibrary {
                     int responseCode=conn.getResponseCode();
 
                     if (responseCode == HttpsURLConnection.HTTP_OK) {
-                        onUserSuccessBlock(conn, responseApi);
+                        onStringSuccessBlock(conn, responseApi);
                     }
                     else {
                         onFailureBlock(conn, responseApi);

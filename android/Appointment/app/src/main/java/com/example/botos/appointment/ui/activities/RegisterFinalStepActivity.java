@@ -101,13 +101,13 @@ public class RegisterFinalStepActivity extends BaseActivity {
 
         HashMap<String, String> header = new HashMap<>();
         header.put("authorization", Engine.getInstance().userModel.getToken());
-        ApiLibrary.putRequestUserModel(Constants.BASE_URL + Constants.ADD_PHONE, params, header, new AppointmentApiResponse<UserModel>() {
+        ApiLibrary.putRequestString(Constants.BASE_URL + Constants.ADD_PHONE, params, header, new AppointmentApiResponse<String>() {
             @Override
-            public void onSuccess(UserModel response) {
+            public void onSuccess(String response) {
                 Log.d(TAG, "onSuccess() called with: " + "response = [" + response + "]");
                 Toast.makeText(RegisterFinalStepActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
-                Engine.getInstance().userModel.setPassword(mPhoneInput.getEditText().getText().toString());
-                addToDataBase(response);
+                Engine.getInstance().userModel.setPhone(mPhoneInput.getEditText().getText().toString());
+                addToDataBase(Engine.getInstance().userModel);
                 goToMainMenu();
             }
 
