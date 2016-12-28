@@ -87,7 +87,7 @@ public class CompanyRepository {
 
     public List<Company> findCompaniesByNameAndDomain(int domainID, String name) {
         SqlQueryBuilder builder = new SqlQueryBuilder(SELECT_CLAUSE)
-                .append("INNER JOIN company_to_domains cd ON c.id = cd.company_id ")
+                .append("INNER JOIN companies_to_domains cd ON c.id = cd.company_id ")
                 .append("INNER JOIN company_domains d ON cd.domain_id = d.id ")
                 .append("WHERE d.id = :domainID ")
                 .conditionalAppend(name != null, "AND LOWER(c.name) like %:name%");
