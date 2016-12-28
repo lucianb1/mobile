@@ -26,7 +26,7 @@ import java.util.Set;
 public class CompanyRepository {
 
     private static final CompanyRowMapper rowMapper = new CompanyRowMapper();
-    private static final String SELECT_CLAUSE = "SELECT c.id, c.name, X(c.coordinates) AS lon, Y(c.coordinates) AS lat, c.address, order_nr FROM companies c ";
+    private static final String SELECT_CLAUSE = "SELECT c.id, c.name, X(c.coordinates) AS lon, Y(c.coordinates) AS lat, c.address, c.order_nr FROM companies c ";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
