@@ -2,6 +2,7 @@ package com.example.botos.appointment.ui.activities.userScreens.fragments;
 
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,12 +10,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.botos.appointment.R;
 import com.example.botos.appointment.adapters.DomainAdapter;
 import com.example.botos.appointment.models.DomainModel;
+import com.example.botos.appointment.platform.AppointmentApiResponse;
+import com.example.botos.appointment.platform.Engine;
+import com.example.botos.appointment.utils.ApiLibrary;
+import com.example.botos.appointment.utils.Constants;
+import com.example.botos.appointment.utils.DialogUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DomainsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -66,8 +74,8 @@ public class DomainsFragment extends Fragment {
     }
 
     private void load() {
-        addtest();
         setAdapter();
+        getDomains();
     }
 
     private void setAdapter() {
@@ -79,11 +87,30 @@ public class DomainsFragment extends Fragment {
         mDomainRecycleView.setAdapter(mDomainAdapter);
     }
 
-    private void addtest() {
-        for (int i = 0; i < 20; i++) {
-            DomainModel domainModel = new DomainModel();
-            domainModel.setName(String.valueOf(i));
-            mDomainModels.add(domainModel);
-        }
+    private void getDomains() {
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", Engine.getInstance().userModel.getToken());
+        final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(getActivity(), false, null, getResources().getString(R.string.loading));
+        progreeDialog.show();
+        ApiLibrary.getRequestDomains(Constants.BASE_URL + Constants.GET_DOMAINS, null, header, new AppointmentApiResponse<ArrayList<DomainModel>>() {
+            @Override
+            public void onSuccess(ArrayList<DomainModel> response) {
+                mDomainModels.clear();
+                mDomainModels.addAll(response);
+                mDomainAdapter.update(mDomainModels);
+                progreeDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure() {
+                progreeDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                progreeDialog.dismiss();
+            }
+        });
     }
 }

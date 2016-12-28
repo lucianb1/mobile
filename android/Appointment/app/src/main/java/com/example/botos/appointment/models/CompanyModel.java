@@ -9,14 +9,26 @@ import android.os.Parcelable;
 
 public class CompanyModel implements Parcelable{
 
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String ADDRESS = "address";
+    public static final String LATI = "latitude";
+    public static final String LONGI = "longitude";
+
     private int mId;
     private String mName;
+    private String mAddress;
+    private double mLati;
+    private double mLongi;
 
     public CompanyModel() {}
 
     protected CompanyModel(Parcel in) {
         mId = in.readInt();
         mName = in.readString();
+        mAddress = in.readString();
+        mLati = in.readDouble();
+        mLongi = in.readDouble();
     }
 
     public static final Creator<CompanyModel> CREATOR = new Creator<CompanyModel>() {
@@ -47,6 +59,30 @@ public class CompanyModel implements Parcelable{
         mName = name;
     }
 
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setAddress(String mAddress) {
+        this.mAddress = mAddress;
+    }
+
+    public double getLati() {
+        return mLati;
+    }
+
+    public void setLati(double mLati) {
+        this.mLati = mLati;
+    }
+
+    public double getLongi() {
+        return mLongi;
+    }
+
+    public void setLongi(double mLongi) {
+        this.mLongi = mLongi;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -56,5 +92,8 @@ public class CompanyModel implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(mId);
         parcel.writeString(mName);
+        parcel.writeString(mAddress);
+        parcel.writeDouble(mLati);
+        parcel.writeDouble(mLongi);
     }
 }

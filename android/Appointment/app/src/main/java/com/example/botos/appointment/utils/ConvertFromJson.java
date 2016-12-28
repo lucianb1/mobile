@@ -1,5 +1,7 @@
 package com.example.botos.appointment.utils;
 
+import com.example.botos.appointment.models.CompanyModel;
+import com.example.botos.appointment.models.DomainModel;
 import com.example.botos.appointment.models.UserModel;
 
 import org.json.JSONException;
@@ -29,5 +31,35 @@ public class ConvertFromJson {
             e.printStackTrace();
         }
         return userModel;
+    }
+
+    public static DomainModel toDomainModel(JSONObject jsonObject) {
+        DomainModel domainModel = new DomainModel();
+
+        try {
+            domainModel.setName(jsonObject.getString(DomainModel.NAME));
+            domainModel.setId(jsonObject.getInt(DomainModel.ID));
+            domainModel.setOrderNr(jsonObject.getInt(DomainModel.OREDER_NR));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return domainModel;
+    }
+
+    public static CompanyModel toCompanyModel(JSONObject jsonObject) {
+        CompanyModel companyModel = new CompanyModel();
+
+        try {
+            companyModel.setName(jsonObject.getString(CompanyModel.NAME));
+            companyModel.setId(jsonObject.getInt(CompanyModel.ID));
+            companyModel.setAddress(jsonObject.getJSONObject("location").getString(CompanyModel.ADDRESS));
+            companyModel.setLati(jsonObject.getJSONObject("location").getDouble(CompanyModel.LATI));
+            companyModel.setLongi(jsonObject.getJSONObject("location").getDouble(CompanyModel.LONGI));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return companyModel;
     }
 }

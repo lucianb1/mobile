@@ -2,6 +2,7 @@ package com.example.botos.appointment.ui.activities.userScreens.fragments;
 
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,20 +10,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.botos.appointment.R;
 import com.example.botos.appointment.adapters.CompanyAdapter;
 import com.example.botos.appointment.models.CompanyModel;
+import com.example.botos.appointment.models.DomainModel;
+import com.example.botos.appointment.platform.AppointmentApiResponse;
+import com.example.botos.appointment.platform.Engine;
+import com.example.botos.appointment.utils.ApiLibrary;
+import com.example.botos.appointment.utils.Constants;
+import com.example.botos.appointment.utils.DialogUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CompaniesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private DomainModel mDomainModel;
     private RecyclerView mCompanyRecyclerView;
     private GridLayoutManager mGridLayoutManager;
     private ArrayList<CompanyModel> mCompanyModels = new ArrayList<>();
@@ -32,11 +38,10 @@ public class CompaniesFragment extends Fragment {
     public CompaniesFragment() {
         // Required empty public constructor
     }
-    public static CompaniesFragment newInstance(String param1, String param2) {
+    public static CompaniesFragment newInstance(DomainModel domainModel) {
         CompaniesFragment fragment = new CompaniesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_PARAM1, domainModel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,8 +50,7 @@ public class CompaniesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mDomainModel = getArguments().getParcelable(ARG_PARAM1);
         }
     }
 
@@ -66,8 +70,8 @@ public class CompaniesFragment extends Fragment {
     }
 
     private void load() {
-        addtest();
         setAdapter();
+        getCompanies();
     }
 
     private void setAdapter() {
@@ -79,12 +83,33 @@ public class CompaniesFragment extends Fragment {
         mCompanyRecyclerView.setAdapter(mCompanyAdapter);
     }
 
-    private void addtest() {
-        for (int i = 0; i < 20; i++) {
-            CompanyModel domainModel = new CompanyModel();
-            domainModel.setName(String.valueOf(i));
-            mCompanyModels.add(domainModel);
-        }
+    private void getCompanies() {
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", Engine.getInstance().userModel.getToken());
+        HashMap<String, String> params = new HashMap<>();
+        params.put("domainID", String.valueOf(mDomainModel.getId()));
+        final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(getActivity(), false, null, getResources().getString(R.string.loading));
+        progreeDialog.show();
+        ApiLibrary.getRequestCompanies(Constants.BASE_URL + Constants.GET_COMPANIES, params, header, new AppointmentApiResponse<ArrayList<CompanyModel>>() {
+            @Override
+            public void onSuccess(ArrayList<CompanyModel> response) {
+                mCompanyModels.clear();
+                mCompanyModels.addAll(response);
+                mCompanyAdapter.update(mCompanyModels);
+                progreeDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure() {
+                progreeDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                progreeDialog.dismiss();
+            }
+        });
     }
 
 }

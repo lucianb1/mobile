@@ -9,14 +9,20 @@ import android.os.Parcelable;
 
 public class DomainModel implements Parcelable{
 
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String OREDER_NR = "orderNr";
+
     private int mId;
     private String mName;
+    private int mOrderNr;
 
     public DomainModel() {}
 
     protected DomainModel(Parcel in) {
         mId = in.readInt();
         mName = in.readString();
+        mOrderNr = in.readInt();
     }
 
     public static final Creator<DomainModel> CREATOR = new Creator<DomainModel>() {
@@ -47,6 +53,14 @@ public class DomainModel implements Parcelable{
         mName = name;
     }
 
+    public int getOrderNr() {
+        return mOrderNr;
+    }
+
+    public void setOrderNr(int mOrderNr) {
+        this.mOrderNr = mOrderNr;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -56,5 +70,6 @@ public class DomainModel implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(mId);
         parcel.writeString(mName);
+        parcel.writeInt(mOrderNr);
     }
 }

@@ -57,7 +57,7 @@ public class DomainAdapter extends RecyclerView.Adapter<DomainAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = ((UserMainMenuActivity)mContext).getFragmentManager();
-                CompaniesFragment newFragment = CompaniesFragment.newInstance("", "");
+                CompaniesFragment newFragment = CompaniesFragment.newInstance(rowModel);
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.replace(R.id.container, newFragment,mContext.getResources().getString(R.string.companies_title)).addToBackStack(mContext.getResources().getString(R.string.companies_title)).commit();
                 ((BaseActivity)mContext).setTitle(mContext.getString(R.string.companies_title));
