@@ -50,5 +50,6 @@
     <string name="companies_title">Saloane</string>
     <string name="title_activity_company_details">CompanyDetails</string>
     <string name="title_activity_employees">Employees</string>
+    <string name="title_activity_day_schedule">DayScheduleActivity</string>
 
 </resources>

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.botos.appointment.R;
 import com.example.botos.appointment.models.EmployeeModel;
 import com.example.botos.appointment.ui.activities.CalendarActivity;
+import com.example.botos.appointment.ui.activities.DayScheduleActivity;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         holder.mRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent calendar = new Intent(mContext, CalendarActivity.class);
+                Intent calendar = new Intent(mContext, DayScheduleActivity.class);
                 mContext.startActivity(calendar);
             }
         });
