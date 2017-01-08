@@ -6,9 +6,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ro.hoptrop.core.exceptions.NotFoundException;
-import ro.hoptrop.repository.rowmapper.WeekTimetableRowMapper;
+import ro.hoptrop.model.timetable.DayTimetable;
 import ro.hoptrop.model.timetable.WeekTimetable;
-import ro.hoptrop.model.timetable.WeekTimetableSerializer;
+import ro.hoptrop.core.serializer.WeekTimetableSerializer;
+import ro.hoptrop.repository.rowmapper.DayTimetableRowMapper;
+import ro.hoptrop.repository.rowmapper.WeekTimetableRowMapper;
+
+import java.util.Date;
 
 /**
  * Created by Luci on 18-Dec-16.
@@ -17,6 +21,7 @@ import ro.hoptrop.model.timetable.WeekTimetableSerializer;
 public class TimetableRepository {
 
     private static final WeekTimetableRowMapper weekTimetableRowMapper = new WeekTimetableRowMapper();
+    private static final DayTimetableRowMapper dayTimetableRowMapper = new DayTimetableRowMapper();
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -26,6 +31,18 @@ public class TimetableRepository {
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("memberID", memberID);
         try {
             return jdbcTemplate.queryForObject(sql, params, weekTimetableRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    public DayTimetable getMemberDayTimetable(int memberID, Date date) {
+        String sql = "SELECT * FROM day_timetables WHERE member_id = :memberID AND date = :date";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("memberID", memberID)
+                .addValue("date", date);
+        try {
+            return jdbcTemplate.queryForObject(sql, params, dayTimetableRowMapper);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException();
         }

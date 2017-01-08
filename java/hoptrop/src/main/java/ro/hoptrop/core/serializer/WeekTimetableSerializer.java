@@ -1,4 +1,4 @@
-package ro.hoptrop.model.timetable;
+package ro.hoptrop.core.serializer;
 
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;

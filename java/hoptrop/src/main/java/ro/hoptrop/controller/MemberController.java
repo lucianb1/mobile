@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ro.hoptrop.model.member.Member;
+import ro.hoptrop.model.timetable.DayTimetable;
+import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.service.MemberService;
 import ro.hoptrop.web.response.member.MemberFeatureJsonResponse;
 import ro.hoptrop.web.response.member.MemberJsonResponse;
+import ro.hoptrop.web.response.timetable.DayTimetableJsonResponse;
+import ro.hoptrop.web.response.timetable.WeekTimetableJsonResponse;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +43,31 @@ public class MemberController {
         return memberService.getMemberServices(memberID, domainID).stream().map(item -> MemberFeatureJsonResponse.from(item)).collect(Collectors.toList());
     }
 
+    @RequestMapping(value = "/{memberID}/{date}", method = RequestMethod.GET)
+    public DayTimetableJsonResponse getMemberTimetable(Integer memberID, Date date) {
+        return mapToDayTimetableResponse(memberService.getDayTimetable(memberID, date));
+    }
+
+    @RequestMapping(value = "/{memberID}", method = RequestMethod.GET)
+    public WeekTimetableJsonResponse getMemberDefaultTimetable(Integer memberID) {
+        return mapToWeekTimetableResponse(memberService.getDefaultTimetable(memberID));
+    }
+
 
     public MemberJsonResponse mapToMemberResponse(Member member) {
         return new MemberJsonResponse()
                 .setId(member.getId())
                 .setName(member.getName());
+    }
+
+    public WeekTimetableJsonResponse mapToWeekTimetableResponse(WeekTimetable timetable) {
+        WeekTimetableJsonResponse response = new WeekTimetableJsonResponse();
+        return response;
+    }
+
+    public DayTimetableJsonResponse mapToDayTimetableResponse(DayTimetable timetable) {
+        DayTimetableJsonResponse response = new DayTimetableJsonResponse();
+        return response;
     }
 
 }

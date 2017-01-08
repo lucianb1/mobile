@@ -2,7 +2,7 @@ package ro.hoptrop.repository.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ro.hoptrop.model.timetable.WeekTimetable;
-import ro.hoptrop.model.timetable.WeekTimetableSerializer;
+import ro.hoptrop.core.serializer.WeekTimetableSerializer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

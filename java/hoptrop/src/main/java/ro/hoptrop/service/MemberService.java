@@ -2,9 +2,12 @@ package ro.hoptrop.service;
 
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.member.MemberFeature;
+import ro.hoptrop.model.timetable.DayTimetable;
+import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.web.request.member.CreateMemberServiceRequest;
 import ro.hoptrop.web.request.member.UpdateMemberServiceRequest;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +30,10 @@ public interface MemberService {
     void createDefaultTimetable(int memberID, short[][] hours);
 
     void updateDefaultTimetable(int memberID, short[][] hours);
+
+    WeekTimetable getDefaultTimetable(int memberID);
+
+    DayTimetable getDayTimetable(int memberID, Date date);
 
     void deleteMember(int companyID, int memberID); //company id for validation
 

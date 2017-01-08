@@ -7,12 +7,15 @@ import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.member.MemberFeature;
+import ro.hoptrop.model.timetable.DayTimetable;
+import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.model.token.member.MemberToken;
 import ro.hoptrop.repository.*;
 import ro.hoptrop.service.MemberService;
 import ro.hoptrop.web.request.member.CreateMemberServiceRequest;
 import ro.hoptrop.web.request.member.UpdateMemberServiceRequest;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -87,6 +90,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateDefaultTimetable(int memberID, short[][] hours) {
         timetableRepository.updateDefaultTimetable(memberID, hours);
+    }
+
+    @Override
+    public WeekTimetable getDefaultTimetable(int memberID) {
+        return timetableRepository.getMemberDefaultTimetable(memberID);
+    }
+
+    @Override
+    public DayTimetable getDayTimetable(int memberID, Date date) {
+        return timetableRepository.getMemberDayTimetable(memberID, date);
     }
 
     @Override

@@ -119,4 +119,5 @@ public class MemberRepository {
         jdbcTemplate.update(sql, params);
     }
 
+
 }

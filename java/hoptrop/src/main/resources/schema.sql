@@ -1,6 +1,6 @@
-drop database mobile;
-create database mobile;
-use mobile;
+--drop database mobile;
+--create database mobile;
+--use mobile;
 
 
 CREATE TABLE IF NOT EXISTS accounts (
@@ -87,11 +87,11 @@ CREATE TABLE IF NOT EXISTS member_default_timetables (
     timetable BLOB
 );
 
-CREATE TABLE IF NOT EXISTS timetables (
+CREATE TABLE IF NOT EXISTS day_timetables (
     id INT PRIMARY KEY AUTO_INCREMENT,
     member_id SMALLINT NOT NULL,
-    date DATETIME NOT NULL,
-    hours VARBINARY(384) NOT NULL
+    date DATE NOT NULL,
+    hours BINARY(192) NOT NULL -- 4 * 24 * 2 bytes
 );
 
 /**
