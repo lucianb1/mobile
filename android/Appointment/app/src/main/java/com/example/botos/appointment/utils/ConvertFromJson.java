@@ -2,6 +2,8 @@ package com.example.botos.appointment.utils;
 
 import com.example.botos.appointment.models.CompanyModel;
 import com.example.botos.appointment.models.DomainModel;
+import com.example.botos.appointment.models.MemberModel;
+import com.example.botos.appointment.models.ServicesModel;
 import com.example.botos.appointment.models.UserModel;
 
 import org.json.JSONException;
@@ -49,7 +51,6 @@ public class ConvertFromJson {
 
     public static CompanyModel toCompanyModel(JSONObject jsonObject) {
         CompanyModel companyModel = new CompanyModel();
-
         try {
             companyModel.setName(jsonObject.getString(CompanyModel.NAME));
             companyModel.setId(jsonObject.getInt(CompanyModel.ID));
@@ -61,5 +62,30 @@ public class ConvertFromJson {
             e.printStackTrace();
         }
         return companyModel;
+    }
+
+    public static MemberModel toMemberModel(JSONObject jsonObject) {
+        MemberModel memberModel = new MemberModel();
+        try {
+            memberModel.setName(jsonObject.getString(MemberModel.NAME));
+            memberModel.setId(jsonObject.getInt(MemberModel.ID));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return memberModel;
+    }
+
+    public static ServicesModel toMemberServicesModel(JSONObject jsonObject) {
+        ServicesModel servicesModel = new ServicesModel();
+        try {
+            servicesModel.setName(jsonObject.getString(ServicesModel.NAME));
+            servicesModel.setId(jsonObject.getInt(ServicesModel.ID));
+            servicesModel.setDuration(jsonObject.getInt(ServicesModel.DURATION));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return servicesModel;
     }
 }

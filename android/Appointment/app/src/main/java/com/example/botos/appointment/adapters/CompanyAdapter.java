@@ -54,6 +54,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 Intent company = new Intent(mContext, CompanyDetailsActivity.class);
+                company.putExtra(CompanyDetailsActivity.COMPANY, rowModel);
                 mContext.startActivity(company);
             }
         });

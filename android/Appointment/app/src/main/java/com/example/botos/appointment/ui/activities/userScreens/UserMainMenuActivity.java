@@ -1,11 +1,14 @@
 package com.example.botos.appointment.ui.activities.userScreens;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +25,7 @@ import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.ui.activities.SigninActivity;
 import com.example.botos.appointment.ui.activities.userScreens.fragments.DomainsFragment;
+//import com.example.botos.appointment.ui.activities.userScreens.fragments.MapCompaniesFragment;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
@@ -62,6 +66,7 @@ public class UserMainMenuActivity extends BaseActivity
         mToggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
         setDefaultScreen();
+        checkPermission();
     }
 
     @Override
@@ -183,6 +188,38 @@ public class UserMainMenuActivity extends BaseActivity
             getHelper().getUserModelDao().createOrUpdate(userModel);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkPermission() {
+        ActivityCompat.requestPermissions(UserMainMenuActivity.this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 1
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(UserMainMenuActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 }

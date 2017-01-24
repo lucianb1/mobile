@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.botos.appointment.R;
+import com.example.botos.appointment.models.CompanyModel;
 import com.example.botos.appointment.ui.BaseActivity;
 
 public class CompanyDetailsActivity extends BaseActivity {
 
+    public static String COMPANY = "company";
+
     private Button mAppointmentButton;
+    private CompanyModel mCompanyModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +47,12 @@ public class CompanyDetailsActivity extends BaseActivity {
     }
 
     private void load() {
+        mCompanyModel = getIntent().getParcelableExtra(COMPANY);
         mAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent employees = new Intent(CompanyDetailsActivity.this, EmployeesActivity.class);
+                employees.putExtra(COMPANY, mCompanyModel);
                 startActivity(employees);
             }
         });

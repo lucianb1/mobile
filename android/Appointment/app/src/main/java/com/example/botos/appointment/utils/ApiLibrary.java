@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.botos.appointment.models.CompanyModel;
 import com.example.botos.appointment.models.DomainModel;
+import com.example.botos.appointment.models.MemberModel;
+import com.example.botos.appointment.models.ServicesModel;
 import com.example.botos.appointment.models.UserModel;
 import com.example.botos.appointment.platform.AppointmentApiResponse;
 import com.example.botos.appointment.threadPool.DefaultExecutorSupplier;
@@ -421,6 +423,218 @@ public class ApiLibrary {
             }
         });
     }
+
+    public static void getRequestMembrers(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<ArrayList<MemberModel>> responseApi) {
+        DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    if (params != null) {
+                        url = new URL(setParamsForGetRequest(requestURL, params));
+                    } else {
+                        url = new URL(requestURL);
+                    }
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    setupConnection(conn, Constants.GET);
+
+                    if (header != null)
+                        setHeaders(conn, header);
+
+                    int responseCode=conn.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        onMembersSuccessBlock(conn, responseApi);
+                    }
+                    else {
+                        onFailureBlock(conn, responseApi);
+                    }
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseApi != null)
+                                responseApi.onFailure(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private static void onMembersSuccessBlock(final HttpURLConnection conn, final AppointmentApiResponse<ArrayList<MemberModel>> responseApi) throws JSONException {
+        String response = "";
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = br.readLine()) != null) {
+                response += line;
+            }
+
+        } catch (Exception e) {
+            Log.d("error: ", e.getMessage());
+        }
+        final JSONArray jsonArray = new JSONArray(response);
+        DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<MemberModel> memberModels = new ArrayList<>();
+                if (responseApi != null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            memberModels.add(ConvertFromJson.toMemberModel(jsonArray.getJSONObject(i)));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    responseApi.onSuccess(memberModels);
+                }
+            }
+        });
+    }
+
+    public static void getRequestMembrerServices(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<ArrayList<ServicesModel>> responseApi) {
+        DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    if (params != null) {
+                        url = new URL(setParamsForGetRequest(requestURL, params));
+                    } else {
+                        url = new URL(requestURL);
+                    }
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    setupConnection(conn, Constants.GET);
+
+                    if (header != null)
+                        setHeaders(conn, header);
+
+                    int responseCode=conn.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        onMemberServicesSuccessBlock(conn, responseApi);
+                    }
+                    else {
+                        onFailureBlock(conn, responseApi);
+                    }
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseApi != null)
+                                responseApi.onFailure(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private static void onMemberServicesSuccessBlock(final HttpURLConnection conn, final AppointmentApiResponse<ArrayList<ServicesModel>> responseApi) throws JSONException {
+        String response = "";
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = br.readLine()) != null) {
+                response += line;
+            }
+
+        } catch (Exception e) {
+            Log.d("error: ", e.getMessage());
+        }
+        final JSONArray jsonArray = new JSONArray(response);
+        DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<ServicesModel> servicesModels = new ArrayList<>();
+                if (responseApi != null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            servicesModels.add(ConvertFromJson.toMemberServicesModel(jsonArray.getJSONObject(i)));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    responseApi.onSuccess(servicesModels);
+                }
+            }
+        });
+    }
+
+    public static void getRequestMembrerTimeTable(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<int[]> responseApi) {
+        DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    if (params != null) {
+                        url = new URL(setParamsForGetRequest(requestURL, params));
+                    } else {
+                        url = new URL(requestURL);
+                    }
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    setupConnection(conn, Constants.GET);
+
+                    if (header != null)
+                        setHeaders(conn, header);
+
+                    int responseCode=conn.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        onMemberTimeTableSuccessBlock(conn, responseApi);
+                    }
+                    else {
+                        onFailureBlock(conn, responseApi);
+                    }
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseApi != null)
+                                responseApi.onFailure(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private static void onMemberTimeTableSuccessBlock(final HttpURLConnection conn, final AppointmentApiResponse<int[]> responseApi) throws JSONException {
+        String response = "";
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = br.readLine()) != null) {
+                response += line;
+            }
+
+        } catch (Exception e) {
+            Log.d("error: ", e.getMessage());
+        }
+        final JSONObject baseJsonObj = new JSONObject(response);
+        DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int[] ints = new int[baseJsonObj.getJSONArray("timetable").length()];
+                    if (responseApi != null) {
+                        for (int i = 0; i < baseJsonObj.getJSONArray("timetable").length(); i++) {
+                            ints[i] = baseJsonObj.getJSONArray("timetable").getInt(i);
+                        }
+
+                        responseApi.onSuccess(ints);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
 //    private static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
 //        StringBuilder result = new StringBuilder();

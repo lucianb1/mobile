@@ -16,7 +16,8 @@ public abstract class DateUtils {
     public static final String DAY_MONTH_DATE_FORMAT = "dd-MM";
     public static final String TIME_DATE_FORMAT = "HH:mm";
     public static final String DEFAULT_FORMATTER_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
-    public static final String DATE_FORMATTER_PATTERN = "yyyy-MM-dd";
+    public static final String DATE_FORMATTER_PATTERN = "dd MMM yyyy";
+    public static final String SERVER_DATE_FORMATTER_PATTERN = "dd/MM/yyyy";
 //    public static final String DEFAULT_FORMATTER_PATTERN_FOR_USER = "yyyy-MM-dd'T'HH:mm:ss";
 
     private static DateFormat mDateFormatter;

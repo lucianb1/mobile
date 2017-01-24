@@ -3,11 +3,16 @@ package com.example.botos.appointment.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
+import static android.content.ComponentName.readFromParcel;
+
 /**
  * Created by gabibotos on 22/12/16.
  */
 
-public class CompanyModel implements Parcelable{
+public class CompanyModel implements Parcelable, ClusterItem{
 
     public static final String ID = "id";
     public static final String NAME = "name";
@@ -20,8 +25,16 @@ public class CompanyModel implements Parcelable{
     private String mAddress;
     private double mLati;
     private double mLongi;
+    private int mProfilePhoto;
 
     public CompanyModel() {}
+
+    public CompanyModel(double lati, double longi, String name, int pictureResource) {
+        mName = name;
+        mProfilePhoto = pictureResource;
+        mLati = lati;
+        mLongi = longi;
+    }
 
     protected CompanyModel(Parcel in) {
         mId = in.readInt();
@@ -29,6 +42,7 @@ public class CompanyModel implements Parcelable{
         mAddress = in.readString();
         mLati = in.readDouble();
         mLongi = in.readDouble();
+        mProfilePhoto = in.readInt();
     }
 
     public static final Creator<CompanyModel> CREATOR = new Creator<CompanyModel>() {
@@ -83,6 +97,14 @@ public class CompanyModel implements Parcelable{
         this.mLongi = mLongi;
     }
 
+    public int getProfilePhoto() {
+        return mProfilePhoto;
+    }
+
+    public void setProfilePhoto(int mProfilePhoto) {
+        this.mProfilePhoto = mProfilePhoto;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -95,5 +117,11 @@ public class CompanyModel implements Parcelable{
         parcel.writeString(mAddress);
         parcel.writeDouble(mLati);
         parcel.writeDouble(mLongi);
+        parcel.writeInt(mProfilePhoto);
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(mLati, mLongi);
     }
 }

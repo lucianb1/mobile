@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -23,12 +22,13 @@ import com.example.botos.appointment.R;
 import com.example.botos.appointment.models.UserModel;
 import com.example.botos.appointment.platform.AppointmentApiResponse;
 import com.example.botos.appointment.platform.Engine;
+import com.example.botos.appointment.testPackage.presenterP.SigninPresenter;
+import com.example.botos.appointment.testPackage.interfaceP.SigninView;
 import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.ui.activities.userScreens.UserMainMenuActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
-import com.example.botos.appointment.utils.StringUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -41,7 +41,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class SigninActivity extends BaseActivity {
+public class SigninActivity extends BaseActivity implements SigninView{
 
     private static final String TAG = "SigninActivity";
     private RelativeLayout mFacebookButton;
@@ -54,6 +54,8 @@ public class SigninActivity extends BaseActivity {
     private CallbackManager mCallbackManager;
     private ProfileTracker mProfileTracker;
     private TextView mForgotPasswordButton;
+    private SigninPresenter mSigninPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,7 @@ public class SigninActivity extends BaseActivity {
     }
 
     private void load() {
+        mSigninPresenter = new SigninPresenter(this);
         mEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,53 +111,10 @@ public class SigninActivity extends BaseActivity {
     }
     private void attemptLogin() {
         showProgress(true);
-        // Reset errors.
         mEmailEdit.setError(null);
         mPasswordEdit.setError(null);
 
-        // Store values at the time of the login attempt.
-        String email = mEmailEdit.getText().toString();
-        String password = mPasswordEdit.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            mPasswordEdit.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordEdit;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailEdit.setError(getString(R.string.error_field_required));
-            focusView = mEmailEdit;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailEdit.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailEdit;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-            showProgress(false);
-        } else {
-            loginRequest();
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return StringUtils.isValidEmail(email);
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        mSigninPresenter.onSigninButtonClick();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -218,35 +178,6 @@ public class SigninActivity extends BaseActivity {
             }
         });
 
-    }
-
-    private void loginRequest() {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("email", mEmailEdit.getText().toString());
-        params.put("password", mPasswordEdit.getText().toString());
-        ApiLibrary.postRequestUserModel(Constants.BASE_URL + Constants.LOGIN, params, null, new AppointmentApiResponse<UserModel>() {
-            @Override
-            public void onSuccess(UserModel response) {
-                Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
-                Engine.getInstance().userModel = response;
-                Engine.getInstance().userModel.setIsLoging(true);
-                showProgress(false);
-                addToDataBase(response);
-                goToMainMenu();
-            }
-
-            @Override
-            public void onFailure() {
-                showProgress(false);
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
-                Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
-                showProgress(false);
-            }
-        });
     }
 
     private void serverFacebookLogin(String token) {
@@ -335,4 +266,56 @@ public class SigninActivity extends BaseActivity {
         return false;
     }
 
+    @Override
+    public String getEmail() {
+        return mEmailEdit.getText().toString();
+    }
+
+    @Override
+    public String getPassword() {
+        return mPasswordEdit.getText().toString();
+    }
+
+    @Override
+    public void showEmptyEmailError(int error_field_required) {
+        mEmailEdit.setError(getString(error_field_required));
+        mEmailEdit.requestFocus();
+        showProgress(false);
+    }
+
+    @Override
+    public void showShortPasswordError(int error_invalid_password) {
+        mPasswordEdit.setError(getString(error_invalid_password));
+        mPasswordEdit.requestFocus();
+        showProgress(false);
+    }
+
+    @Override
+    public void showInvalidEmailError(int error_invalid_email) {
+        mEmailEdit.setError(getString(error_invalid_email));
+        mEmailEdit.requestFocus();
+        showProgress(false);
+    }
+
+    @Override
+    public void startApplication(UserModel userModel) {
+        Toast.makeText(SigninActivity.this, R.string.success_request, Toast.LENGTH_SHORT).show();
+        Engine.getInstance().userModel = userModel;
+        Engine.getInstance().userModel.setIsLoging(true);
+        showProgress(false);
+        addToDataBase(userModel);
+        goToMainMenu();
+    }
+
+    @Override
+    public void signinFailure(String error) {
+        Log.d(TAG, "onFailure() called with: " + "error = [" + error + "]");
+        Toast.makeText(SigninActivity.this, error, Toast.LENGTH_SHORT).show();
+        showProgress(false);
+    }
+
+    @Override
+    public void signinFailure() {
+        showProgress(false);
+    }
 }
