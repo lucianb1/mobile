@@ -37,7 +37,7 @@ public class LoginController {
 		return authenticationService.mobileLogin(request.getEmail(), request.getPassword());
 	}
 	
-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	@RequestMapping(value = "/secure/logout", method = RequestMethod.POST)
 	public void logout(TokenAuthentication authentication) {
 		SecurityContextHolder.clearContext();
 		authenticationService.mobileLogout(authentication.getToken());

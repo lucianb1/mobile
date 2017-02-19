@@ -17,7 +17,7 @@ public interface MemberService {
 
     List<Member> getMembersForCompany(int companyID);
 
-    List<MemberFeature> getMemberServices(int memberID, int domainID);
+    List<MemberFeature> getMemberServices(int memberID);
 
     void updateMemberServices(int memberID, List<UpdateMemberServiceRequest> request);
 
@@ -27,9 +27,9 @@ public interface MemberService {
 
     Member registerByToken(int accountID, String token); //TODO return something
 
-    void createDefaultTimetable(int memberID, short[][] hours);
+    void createDefaultTimetable(int memberID, String timetable);
 
-    void updateDefaultTimetable(int memberID, short[][] hours);
+    void updateDefaultTimetable(int memberID, String timetable);
 
     WeekTimetable getDefaultTimetable(int memberID);
 

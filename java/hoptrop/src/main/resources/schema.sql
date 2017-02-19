@@ -59,7 +59,6 @@ CREATE TABLE IF NOT EXISTS members (
 
 CREATE TABLE IF NOT EXISTS member_services (
     id TINYINT PRIMARY KEY AUTO_INCREMENT,
-    domain_id SMALLINT NOT NULL,
     member_id SMALLINT NOT NULL,
     name VARCHAR(50) NOT NULL,
     duration TINYINT NOT NULL, -- in quarters

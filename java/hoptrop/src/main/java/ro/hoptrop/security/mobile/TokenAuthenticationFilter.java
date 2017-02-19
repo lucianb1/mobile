@@ -52,7 +52,7 @@ public class TokenAuthenticationFilter extends GenericFilterBean {
 
 			SecurityContextHolder.getContext().setAuthentication(tokenAuthentication);
 			chain.doFilter(request, response);
-		} catch (Exception e) {
+		} catch (SecurityException e) {
 			LOG.info("Exception occurred while trying to login user based on token: " + e.getMessage());
 			entryPoint.commence(httpServletRequest, httpServletResponse, new MobileAuthenticationException("Cannot authenticate"));
 		}

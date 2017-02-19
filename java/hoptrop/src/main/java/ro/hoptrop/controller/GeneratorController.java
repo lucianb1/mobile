@@ -91,8 +91,8 @@ public class GeneratorController {
             memberService.createMemberServices(member1.getId(), createServicesRequest(domain));
             memberService.createMemberServices(member2.getId(), createServicesRequest(domain));
 
-            memberService.createDefaultTimetable(member1.getId(), createDefeaultTimetable());
-            memberService.createDefaultTimetable(member2.getId(), createDefeaultTimetable());
+            memberService.createDefaultTimetable(member1.getId(), null);//TODO
+            memberService.createDefaultTimetable(member2.getId(), null);//TODO
             //TODO set timetable for activation
         }
     }

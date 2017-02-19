@@ -16,7 +16,7 @@ public class MemberFeatureRowMapper implements RowMapper<MemberFeature> {
         return MemberFeature.builder()
                 .setId(rs.getInt("id"))
                 .setDomainID(rs.getInt("domain_id"))
-                .setName(rs.getString("rs"))
+                .setName(rs.getString("name"))
                 .setMemberID(rs.getInt("member_id"))
                 .setDuration(rs.getInt("duration"))
                 .build();

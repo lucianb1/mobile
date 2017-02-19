@@ -63,11 +63,9 @@ public class MemberRepository {
         }
     }
 
-    public List<MemberFeature> findMemberServices(int id, int domainID) {
-        String sql = "SELECT * FROM member_services WHERE member_id = id AND domain_id = :domainID ORDER BY order_nr";
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", id)
-                .addValue("domainID", domainID);
+    public List<MemberFeature> findMemberServices(int id) {
+        String sql = "SELECT * FROM member_services WHERE member_id = id ORDER BY order_nr ASC";
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
         return jdbcTemplate.query(sql, params, featureRowMapper);
     }
 

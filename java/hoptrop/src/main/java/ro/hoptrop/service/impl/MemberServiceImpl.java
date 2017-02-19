@@ -44,10 +44,9 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findMembersByCompany(companyID);
     }
 
-
     @Override
-    public List<MemberFeature> getMemberServices(int memberID, int domainID) {
-        return memberRepository.findMemberServices(memberID, domainID);
+    public List<MemberFeature> getMemberServices(int memberID) {
+        return memberRepository.findMemberServices(memberID);//TODO
     }
 
     @Override
@@ -81,15 +80,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void createDefaultTimetable(int memberID, short[][] hours) {
-        timetableRepository.createDefaultTimetable(memberID, hours);
+    public void createDefaultTimetable(int memberID, String timetable) {
+        timetableRepository.createDefaultTimetable(memberID, null);
 //        memberRepository.activateMember(memberID);
         //TODO set some flag
     }
 
     @Override
-    public void updateDefaultTimetable(int memberID, short[][] hours) {
-        timetableRepository.updateDefaultTimetable(memberID, hours);
+    public void updateDefaultTimetable(int memberID, String timetable) {
+
+        timetableRepository.updateDefaultTimetable(memberID, null);
     }
 
     @Override
