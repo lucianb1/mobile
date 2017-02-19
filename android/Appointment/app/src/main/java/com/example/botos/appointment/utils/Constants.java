@@ -7,7 +7,7 @@ public class Constants {
 
 //    public static String BASE_URL = "http://localhost:8080";
 //    public static String BASE_URL = "http://192.168.100.5:8080";
-    public static String BASE_URL = "http://192.168.0.108:8080";
+    public static String BASE_URL = "http://192.168.0.106:8080";
 //    public static String BASE_URL = "http://192.168.100.2:8080";
 //    public static String BASE_URL = "http://10.0.2.2:8080";
     public static String REGISTER = "/account/register";
@@ -20,7 +20,7 @@ public class Constants {
     public static String GET_COMPANIES = "/companies";
     public static String GET_MEMBERS = "/members";
     public static String GET_SERVICES = "/services";
-    public static String TIME_TABLE = "/timetable/";
+    public static String TIME_TABLE = "/secure/member/timetable/";
 
 
 

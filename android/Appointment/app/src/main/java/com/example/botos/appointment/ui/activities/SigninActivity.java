@@ -25,6 +25,7 @@ import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.testPackage.presenterP.SigninPresenter;
 import com.example.botos.appointment.testPackage.interfaceP.SigninView;
 import com.example.botos.appointment.ui.BaseActivity;
+import com.example.botos.appointment.ui.activities.memberScreens.MemberMainMenuActivity;
 import com.example.botos.appointment.ui.activities.userScreens.UserMainMenuActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
@@ -239,7 +240,7 @@ public class SigninActivity extends BaseActivity implements SigninView{
                 startActivity(userMain);
                 break;
             case UserModel.MEMBER:
-                Intent memberMain = new Intent(SigninActivity.this, UserMainMenuActivity.class);
+                Intent memberMain = new Intent(SigninActivity.this, MemberMainMenuActivity.class);
                 startActivity(memberMain);
                 break;
             case UserModel.ADMIN_MEMBER:

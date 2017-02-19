@@ -1,5 +1,7 @@
 package com.example.botos.appointment.ui.activities.memberScreens;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.ui.activities.CalendarActivity;
 import com.example.botos.appointment.ui.activities.SigninActivity;
+import com.example.botos.appointment.ui.activities.userScreens.fragments.DomainsFragment;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
@@ -56,6 +59,7 @@ public class MemberMainMenuActivity extends BaseActivity
         mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
+        setDefaultScreen();
     }
 
     @Override
@@ -88,6 +92,14 @@ public class MemberMainMenuActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setDefaultScreen() {
+        FragmentManager fragmentManager = getFragmentManager();
+        WeekPlanFragment weekPlanFragment = WeekPlanFragment.newInstance("", "");
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, weekPlanFragment,getResources().getString(R.string.domains_title)).addToBackStack(getResources().getString(R.string.domains_title)).commit();
+        setTitle(getString(R.string.domains_title));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

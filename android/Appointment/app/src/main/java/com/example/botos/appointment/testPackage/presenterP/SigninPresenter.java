@@ -41,12 +41,6 @@ public class SigninPresenter {
         }
 
         loginRequest();
-//        boolean loginSucces = loginServices.login(username, password);
-//        if(loginSucces) {
-//            view.startMainActivity();
-//            return;
-//        }
-//        view.showWrongLoginError(R.string.wrong_login_error);
     }
 
     private void loginRequest() {
