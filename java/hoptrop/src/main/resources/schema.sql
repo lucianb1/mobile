@@ -69,8 +69,10 @@ CREATE TABLE IF NOT EXISTS appointments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     account_id INT NOT NULL,
     member_id SMALLINT NOT NULL,
-    member_services TINYINT NOT NULL,
-    hour SMALLINT NOT NULL -- in quarters
+    member_service SMALLINT NOT NULL,
+    date DATE NOT NULL,
+    hour SMALLINT NOT NULL, -- in quarters
+    status VARCHAR(25) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS member_tokens (
@@ -86,11 +88,12 @@ CREATE TABLE IF NOT EXISTS member_default_timetables (
     timetable BLOB
 );
 
-CREATE TABLE IF NOT EXISTS day_timetables (
+CREATE TABLE IF NOT EXISTS member_day_timetables (
     id INT PRIMARY KEY AUTO_INCREMENT,
     member_id SMALLINT NOT NULL,
     date DATE NOT NULL,
-    hours BINARY(192) NOT NULL -- 4 * 24 * 2 bytes
+    timetable BINARY(192) NOT NULL, -- 4 * 24 * 2 bytes
+    UNIQUE KEY 'unique_day_index' (member_id, date)
 );
 
 /**

@@ -2,6 +2,7 @@ package ro.hoptrop.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ro.hoptrop.core.converter.WeekTimetableConverter;
 import ro.hoptrop.core.exceptions.BadRequestException;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
@@ -81,15 +82,15 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void createDefaultTimetable(int memberID, String timetable) {
-        timetableRepository.createDefaultTimetable(memberID, null);
+        timetableRepository.createDefaultTimetable(memberID, WeekTimetableConverter.toBytes(timetable));
 //        memberRepository.activateMember(memberID);
         //TODO set some flag
     }
 
     @Override
     public void updateDefaultTimetable(int memberID, String timetable) {
-
-        timetableRepository.updateDefaultTimetable(memberID, null);
+        //TODO validation for already existing appointments
+        timetableRepository.updateDefaultTimetable(memberID, WeekTimetableConverter.toBytes(timetable));
     }
 
     @Override

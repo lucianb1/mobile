@@ -63,10 +63,20 @@ public class MemberRepository {
         }
     }
 
-    public List<MemberFeature> findMemberServices(int id) {
-        String sql = "SELECT * FROM member_services WHERE member_id = id ORDER BY order_nr ASC";
-        MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
+    public List<MemberFeature> findMemberServices(int memberID) {
+        String sql = "SELECT * FROM member_services WHERE member_id = memberID ORDER BY order_nr ASC";
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("memberID", memberID);
         return jdbcTemplate.query(sql, params, featureRowMapper);
+    }
+
+    public MemberFeature findMemberService(int serviceID) {
+        String sql = "SELECT * FROM member_services WHERE id = :serviceID ";
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("serviceID", serviceID);
+        try {
+            return jdbcTemplate.queryForObject(sql, params, featureRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException();
+        }
     }
 
     /**

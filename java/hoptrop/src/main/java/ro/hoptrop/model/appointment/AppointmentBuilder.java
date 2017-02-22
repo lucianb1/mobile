@@ -14,11 +14,13 @@ public class AppointmentBuilder {
     private int accountID;
     private Date date;
     private TimeInterval[] timeIntervals;
+    private AppointmentStatus status;
 
-    AppointmentBuilder() {}
+    AppointmentBuilder() {
+    }
 
     public Appointment build() {
-        return new Appointment(id, memberID, accountID, date, timeIntervals);
+        return new Appointment(id, memberID, accountID, date, timeIntervals, status);
     }
 
     public AppointmentBuilder setId(int id) {
@@ -43,6 +45,11 @@ public class AppointmentBuilder {
 
     public AppointmentBuilder setTimeIntervals(TimeInterval[] timeIntervals) {
         this.timeIntervals = timeIntervals;
+        return this;
+    }
+
+    public AppointmentBuilder setStatus(AppointmentStatus status) {
+        this.status = status;
         return this;
     }
 }

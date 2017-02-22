@@ -2,8 +2,9 @@ package ro.hoptrop.core.converter;
 
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
-import java.util.Arrays;
-import java.util.Base64;
+
+import static ro.hoptrop.core.constants.TimetableConstants.QUARTERS_IN_DAY;
+import static ro.hoptrop.core.constants.TimetableConstants.WEEK_TIMETABLE_BYTES_SIZE;
 
 /**
  * Created by Luci on 16-Feb-17.
@@ -14,20 +15,18 @@ public class DayTimetableConverter {
         return null;
     }
 
-    public static short[][] fromString(String timetable) {
+    public static short[] fromString(String timetable) {
         return null;
     }
 
-    public static void main(String[] args) {
-        String text = "text";
-        short[] array = new short[] {0, 1, 0, 1, 0, 1, 0, 1, 0};
-        ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 2);
-        ShortBuffer shortBuffer = byteBuffer.asShortBuffer();
+    public static byte[] fromShortAray(short[] array) {
+        if (array.length != QUARTERS_IN_DAY) {
+            throw new RuntimeException("Invalid timetable length: " + array.length);
+        }
+        ByteBuffer buffer = ByteBuffer.allocate(WEEK_TIMETABLE_BYTES_SIZE);
+        ShortBuffer shortBuffer = buffer.asShortBuffer();
         shortBuffer.put(array);
-
-        String encoded = new String(Base64.getEncoder().encode(byteBuffer).array());
-        System.out.println(encoded);
-        System.out.println(Arrays.toString(Base64.getDecoder().decode(encoded)));
+        return buffer.array();
     }
 
 

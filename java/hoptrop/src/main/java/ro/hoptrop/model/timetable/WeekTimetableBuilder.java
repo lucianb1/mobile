@@ -7,13 +7,13 @@ public class WeekTimetableBuilder {
 
     private int id;
     private int memberID;
-    private short[][] weekTimtable;
+    private short[][] timetable;
 
     WeekTimetableBuilder() {
     }
 
     public WeekTimetable build() {
-        return new WeekTimetable(id, memberID, weekTimtable);
+        return new WeekTimetable(id, memberID, timetable);
     }
 
     public WeekTimetableBuilder setId(int id) {
@@ -26,8 +26,8 @@ public class WeekTimetableBuilder {
         return this;
     }
 
-    public WeekTimetableBuilder setWeekTimetable(short[][] weekTimtable) {
-        this.weekTimtable = weekTimtable;
+    public WeekTimetableBuilder setWeekTimetable(short[][] timetable) {
+        this.timetable = timetable;
         return this;
     }
 }

@@ -1,18 +1,23 @@
 package ro.hoptrop.web.request.appointment;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 /**
  * Created by Luci on 14-Jan-17.
  */
 public class NewAppointmentRequest {
 
-    private Integer memberID;
     private Integer serviceID;
-    private Integer hour; // in quarter
-    private Integer day;
 
-    public void setMemberID(Integer memberID) {
-        this.memberID = memberID;
-    }
+    @NotNull
+    @Min(0)
+    @Max(95)
+    private Integer hour; // in quarter
+
+    private Date date;
 
     public void setServiceID(Integer serviceID) {
         this.serviceID = serviceID;
@@ -22,8 +27,12 @@ public class NewAppointmentRequest {
         this.hour = hour;
     }
 
-    public Integer getMemberID() {
-        return memberID;
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Integer getServiceID() {
@@ -33,4 +42,6 @@ public class NewAppointmentRequest {
     public Integer getHour() {
         return hour;
     }
+
+
 }

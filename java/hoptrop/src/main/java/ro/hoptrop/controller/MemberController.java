@@ -9,7 +9,7 @@ import ro.hoptrop.model.timetable.DayTimetable;
 import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.MemberService;
-import ro.hoptrop.web.request.timetable.UpdateWeekTimetableRequest;
+import ro.hoptrop.web.request.timetable.SetWeekTimetableRequest;
 import ro.hoptrop.web.response.member.MemberJsonResponse;
 import ro.hoptrop.web.response.member.MemberServiceJsonResponse;
 import ro.hoptrop.web.response.timetable.DayTimetableJsonResponse;
@@ -29,12 +29,12 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/members/register", method = RequestMethod.POST)
     public void register(String token) {
 
     }
 
-    @RequestMapping(value = "/companies/{companyID}/members", method = RequestMethod.GET)
+    @RequestMapping(value = "/members/companies/{companyID}/members", method = RequestMethod.GET)
     public List<MemberJsonResponse> getMembersForCompany(@PathVariable int companyID) {
         return memberService.getMembersForCompany(companyID).stream().map(this::mapToMemberResponse).collect(Collectors.toList());
     }
@@ -45,12 +45,17 @@ public class MemberController {
     }
 
 
-    @RequestMapping(value = "/members/{memberID}/timetable", method = RequestMethod.GET)
-    public DayTimetableJsonResponse getMemberTimetable(@PathVariable Integer memberID, @RequestParam @DateTimeFormat(pattern="dd/MM/yyyy") Date date) {
+    @RequestMapping(value = "/members/{memberID}/timetable/day", method = RequestMethod.GET)
+    public DayTimetableJsonResponse getMemberDayTimetable(@PathVariable Integer memberID, @RequestParam @DateTimeFormat(pattern="dd/MM/yyyy") Date date) {
         return mapToDayTimetableResponse(memberService.getDayTimetable(memberID, date));
     }
 
-    @RequestMapping(value = "/{memberID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/members/{memberID}/timetable/week", method = RequestMethod.GET)
+    public DayTimetableJsonResponse getMemberWeekTimetable(@PathVariable Integer memberID, @RequestParam @DateTimeFormat(pattern="dd/MM/yyyy") Date date) {
+        return mapToDayTimetableResponse(memberService.getDayTimetable(memberID, date));
+    }
+
+    @RequestMapping(value = "/members/{memberID}", method = RequestMethod.GET)
     public WeekTimetableJsonResponse getMemberDefaultTimetable(Integer memberID) {
         return mapToWeekTimetableResponse(memberService.getDefaultTimetable(memberID));
     }
@@ -58,7 +63,7 @@ public class MemberController {
 
     //TODO has member role
     @RequestMapping(value = "/secure/member/timetable/", method = RequestMethod.POST)
-    public void createTimetable(@Valid @RequestBody UpdateWeekTimetableRequest request, @AuthenticationPrincipal PrincipalUser principalUser) {
+    public void createTimetable(@Valid @RequestBody SetWeekTimetableRequest request, @AuthenticationPrincipal PrincipalUser principalUser) {
         memberService.createDefaultTimetable(principalUser.getMemberID(), request.getTimetable());
     }
 

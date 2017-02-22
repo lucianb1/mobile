@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ro.hoptrop.core.converter.WeekTimetableConverter;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.model.company.Location;
+import ro.hoptrop.model.domain.CompanyDomain;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.token.member.MemberToken;
 import ro.hoptrop.service.AccountService;
@@ -76,10 +78,10 @@ public class GeneratorController {
     }
 
     private void createCompanies(int count) {
-        List<Integer> companyDomains = domainService.getAllCompanyDomains().stream().map(item -> item.getId()).collect(Collectors.toList());
+        List<Integer> companyDomains = domainService.getAllCompanyDomains().stream().map(CompanyDomain::getId).collect(Collectors.toList());
         for (int i = 0; i < count; i++) {
             Integer domain = companyDomains.get(random.nextInt(companyDomains.size()));
-            Company newCompany = companyService.createCompany(randomString(6), generateRandomLocation(), new HashSet<>(Arrays.asList(domain)), 0);
+            Company newCompany = companyService.createCompany(randomString(6), generateRandomLocation(), new HashSet<>(Collections.singletonList(domain)), 0);
             LOG.info("Members:");
             Account user1 = createUser();
             Account user2 = createUser();
@@ -91,10 +93,23 @@ public class GeneratorController {
             memberService.createMemberServices(member1.getId(), createServicesRequest(domain));
             memberService.createMemberServices(member2.getId(), createServicesRequest(domain));
 
-            memberService.createDefaultTimetable(member1.getId(), null);//TODO
-            memberService.createDefaultTimetable(member2.getId(), null);//TODO
+            memberService.createDefaultTimetable(member1.getId(), randomTimetable());
+            memberService.createDefaultTimetable(member2.getId(), randomTimetable());
             //TODO set timetable for activation
         }
+    }
+
+    private String randomTimetable() {
+        short[][] timetable = new short[7][96];
+        for (int i =0 ;i < 7; i++) {
+            for (int j = 20; j < 30; j++) {
+                timetable[i][j] = 1;
+            }
+            for (int j = 40; j < 50; j++) {
+                timetable[i][j] = 1;
+            }
+        }
+        return WeekTimetableConverter.toStringFormat(timetable);
     }
 
     private Location generateRandomLocation() {

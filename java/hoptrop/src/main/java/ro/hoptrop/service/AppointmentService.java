@@ -6,5 +6,5 @@ import ro.hoptrop.web.request.appointment.NewAppointmentRequest;
  * Created by Luci on 14-Jan-17.
  */
 public interface AppointmentService {
-    void makeAppointment(int accountID, NewAppointmentRequest request);
+    void makeAppointment(int memberID, int accountID, NewAppointmentRequest request);
 }

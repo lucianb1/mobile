@@ -3,7 +3,7 @@ package ro.hoptrop.web.request.timetable;
 /**
  * Created by Luci on 16-Feb-17.
  */
-public class UpdateWeekTimetableRequest {
+public class SetWeekTimetableRequest {
 
 
     private String timetable;
