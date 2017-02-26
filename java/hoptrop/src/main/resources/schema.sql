@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS member_day_timetables (
     member_id SMALLINT NOT NULL,
     date DATE NOT NULL,
     timetable BINARY(192) NOT NULL, -- 4 * 24 * 2 bytes
-    UNIQUE KEY 'unique_day_index' (member_id, date)
+    UNIQUE KEY unique_day_index (member_id, date)
 );
 
 /**

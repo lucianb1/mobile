@@ -64,7 +64,7 @@ public class MemberRepository {
     }
 
     public List<MemberFeature> findMemberServices(int memberID) {
-        String sql = "SELECT * FROM member_services WHERE member_id = memberID ORDER BY order_nr ASC";
+        String sql = "SELECT * FROM member_services WHERE member_id = :memberID ORDER BY order_nr ASC";
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("memberID", memberID);
         return jdbcTemplate.query(sql, params, featureRowMapper);
     }

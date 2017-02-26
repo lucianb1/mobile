@@ -30,8 +30,8 @@ public class MemberController {
     private MemberService memberService;
 
     @RequestMapping(value = "/members/register", method = RequestMethod.POST)
-    public void register(String token) {
-
+    public Member register(@AuthenticationPrincipal PrincipalUser principalUser, String token) {
+        return memberService.registerByToken(principalUser.getId(), token);
     }
 
     @RequestMapping(value = "/members/companies/{companyID}/members", method = RequestMethod.GET)
