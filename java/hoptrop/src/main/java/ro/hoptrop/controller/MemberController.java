@@ -54,7 +54,7 @@ public class MemberController {
         return mapToDayTimetableResponse(memberService.getDayTimetable(memberID, date));
     }
 
-    @RequestMapping(value = "/members/{memberID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/members/{memberID}/timetable/default", method = RequestMethod.GET)
     public String getMemberDefaultTimetable(Integer memberID) {
         return WeekTimetableConverter.toStringFormat(memberService.getDefaultTimetable(memberID).getWeekTimetable());
     }
