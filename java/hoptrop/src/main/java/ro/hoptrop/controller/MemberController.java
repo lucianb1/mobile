@@ -4,16 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ro.hoptrop.core.converter.WeekTimetableConverter;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.timetable.DayTimetable;
-import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.MemberService;
 import ro.hoptrop.web.request.timetable.SetWeekTimetableRequest;
 import ro.hoptrop.web.response.member.MemberJsonResponse;
 import ro.hoptrop.web.response.member.MemberServiceJsonResponse;
 import ro.hoptrop.web.response.timetable.DayTimetableJsonResponse;
-import ro.hoptrop.web.response.timetable.WeekTimetableJsonResponse;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -56,8 +55,8 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/members/{memberID}", method = RequestMethod.GET)
-    public WeekTimetableJsonResponse getMemberDefaultTimetable(Integer memberID) {
-        return mapToWeekTimetableResponse(memberService.getDefaultTimetable(memberID));
+    public String getMemberDefaultTimetable(Integer memberID) {
+        return WeekTimetableConverter.toStringFormat(memberService.getDefaultTimetable(memberID).getWeekTimetable());
     }
 
 
@@ -74,10 +73,6 @@ public class MemberController {
                 .setName(member.getName());
     }
 
-    public WeekTimetableJsonResponse mapToWeekTimetableResponse(WeekTimetable timetable) {
-        WeekTimetableJsonResponse response = new WeekTimetableJsonResponse();
-        return response;
-    }
 
     public DayTimetableJsonResponse mapToDayTimetableResponse(DayTimetable timetable) {
         DayTimetableJsonResponse response = new DayTimetableJsonResponse();
