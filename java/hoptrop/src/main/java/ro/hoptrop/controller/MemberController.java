@@ -55,7 +55,7 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/members/{memberID}/timetable/default", method = RequestMethod.GET)
-    public String getMemberDefaultTimetable(Integer memberID) {
+    public String getMemberDefaultTimetable(@PathVariable Integer memberID) {
         return WeekTimetableConverter.toStringFormat(memberService.getDefaultTimetable(memberID).getWeekTimetable());
     }
 
