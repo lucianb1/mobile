@@ -635,6 +635,44 @@ public class ApiLibrary {
         });
     }
 
+    public static void postRequest(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<String> responseApi) {
+        DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    url = new URL(requestURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    setupConnection(conn, Constants.POST);
+
+                    if (header != null)
+                        setHeaders(conn, header);
+                    if (params != null)
+                        setParams(conn, params);
+
+                    int responseCode=conn.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        if (responseApi != null)
+                            responseApi.onSuccess(String.valueOf(HttpsURLConnection.HTTP_OK));
+                    }
+                    else {
+                        onFailureBlock(conn, responseApi);
+                    }
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseApi != null)
+                                responseApi.onFailure(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 
 //    private static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
 //        StringBuilder result = new StringBuilder();

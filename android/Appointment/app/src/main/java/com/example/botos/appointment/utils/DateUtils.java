@@ -12,6 +12,7 @@ import java.util.Locale;
  */
 public abstract class DateUtils {
 
+    public static final String APPOINTMENT_DATE_FORMAT = "dd/MM/yyy'T'HH:mm";
     public static final String DAY_LONG_MONTH_DATE_FORMAT = "dd MMM";
     public static final String DAY_MONTH_DATE_FORMAT = "dd-MM";
     public static final String TIME_DATE_FORMAT = "HH:mm";

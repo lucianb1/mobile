@@ -110,7 +110,7 @@ public class DayScheduleActivity extends BaseActivity {
                 mTodayText.setText(DateUtils.formatDate(mMainCalendar.getTime(), DateUtils.DATE_FORMATTER_PATTERN));
             }
         });
-//        getMemmerServices();
+        getMemmerServices();
         addTest();
         createHoursLayout();
         createList();
@@ -302,13 +302,13 @@ public class DayScheduleActivity extends BaseActivity {
     }
 
     private void getTimeTable() {
-        HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", Engine.getInstance().userModel.getToken());
+//        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", Engine.getInstance().userModel.getToken());
         HashMap<String, String> params = new HashMap<>();
         params.put("date", DateUtils.formatDate(mMainCalendar.getTime(), DateUtils.SERVER_DATE_FORMATTER_PATTERN));
         final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(DayScheduleActivity.this, false, null, getResources().getString(R.string.loading));
         progreeDialog.show();
-        ApiLibrary.getRequestMembrerTimeTable(Constants.BASE_URL + Constants.GET_MEMBERS + "/" + mMemberModel.getId() + Constants.TIME_TABLE, params, header, new AppointmentApiResponse<int[]>() {
+        ApiLibrary.getRequestMembrerTimeTable(Constants.BASE_URL + Constants.GET_MEMBERS + "/" + mMemberModel.getId() + Constants.TIME_TABLE, params, null, new AppointmentApiResponse<int[]>() {
             @Override
             public void onSuccess(int[] response) {
                 mTimeTable = response;
@@ -407,6 +407,7 @@ public class DayScheduleActivity extends BaseActivity {
                     RelativeLayout freeLayout = createFreeLayout(linearLayout, 1, mPopupUnitHeight);
                     TextView freeText = (TextView) freeLayout.getChildAt(0);
                     freeText.setText(DateUtils.formatDate(c.getTime(), DateUtils.TIME_DATE_FORMAT));
+                    onPopupLayoutClick(freeLayout);
                     break;
                 default:
                     throw new RuntimeException();
@@ -426,6 +427,52 @@ public class DayScheduleActivity extends BaseActivity {
 
         dialog.show();
 
+    }
+
+    private void onPopupLayoutClick (final RelativeLayout layout) {
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String timeString = ((TextView) layout.getChildAt(0)).getText().toString();
+                mMainCalendar.clear(Calendar.SECOND);
+                mMainCalendar.clear(Calendar.MILLISECOND);
+                mMainCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeString.split(":")[0]));
+                mMainCalendar.set(Calendar.MINUTE, Integer.parseInt(timeString.split(":")[1]));
+                Date date = mMainCalendar.getTime();
+                int serviceId = mServicesModels.get(mOperationSpinner.getSelectedItemPosition()).getId();
+                int memberId = mMemberModel.getId();
+                int duration = mServicesModels.get(mOperationSpinner.getSelectedItemPosition()).getDuration();
+                sendOrder(date, serviceId, memberId, duration);
+            }
+        });
+    }
+
+    private void sendOrder(Date date, int seviceId, int memberId, int duration) {
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", Engine.getInstance().userModel.getToken());
+        HashMap<String, String> params = new HashMap<>();
+        params.put("service", String.valueOf(seviceId));
+        params.put("time", String.valueOf(duration));
+        params.put("date", DateUtils.formatDate(date, DateUtils.APPOINTMENT_DATE_FORMAT));
+        ApiLibrary.postRequest(Constants.BASE_URL + Constants.CREATE_APPOINTMENT + String.valueOf(memberId), params, header, new AppointmentApiResponse<String>() {
+            @Override
+            public void onSuccess(String response) {
+                if (response.equals("200"))
+                    finish();
+                else
+                    Toast.makeText(DayScheduleActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure() {
+                Toast.makeText(DayScheduleActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(DayScheduleActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void addTest() {

@@ -69,7 +69,7 @@ public class MapCompaniesFragment extends Fragment implements GoogleApiClient.Co
     private Double mLati;
     private Double mLong;
     private Location mLastLocation;
-    private MapFragment mMapFragment;
+//    private MapFragment mMapFragment;
     private GoogleMap mGoogleMap;
     private ClusterManager<CompanyModel> mClusterManager;
     private Random mRandom = new Random(1984);
@@ -111,12 +111,12 @@ public class MapCompaniesFragment extends Fragment implements GoogleApiClient.Co
         } catch (InflateException e) {
         }
         buildGoogleApiClient();
-        if (mMapFragment != null)
-            mMapFragment.getMapAsync(this);
-        else {
-            mMapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.googleMap);
-            mMapFragment.getMapAsync(this);
-        }
+//        if (mMapFragment != null)
+//            mMapFragment.getMapAsync(this);
+//        else {
+//            mMapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.googleMap);
+//            mMapFragment.getMapAsync(this);
+//        }
 
         return mView;
     }

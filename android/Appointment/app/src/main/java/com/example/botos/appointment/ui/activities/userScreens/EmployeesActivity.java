@@ -15,12 +15,14 @@ import com.example.botos.appointment.adapters.EmployeeAdapter;
 import com.example.botos.appointment.models.CompanyModel;
 import com.example.botos.appointment.models.MemberModel;
 import com.example.botos.appointment.platform.AppointmentApiResponse;
+import com.example.botos.appointment.platform.Engine;
 import com.example.botos.appointment.ui.BaseActivity;
 import com.example.botos.appointment.utils.ApiLibrary;
 import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DialogUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EmployeesActivity extends BaseActivity {
 
@@ -61,9 +63,9 @@ public class EmployeesActivity extends BaseActivity {
 
     private void load() {
         mCompanyModel = getIntent().getParcelableExtra(CompanyDetailsActivity.COMPANY);
-        addtest();
-        setAdapter();
-//        getMembers();
+//        addtest();
+//        setAdapter();
+        getMembers();
     }
 
     private void setAdapter() {
@@ -76,13 +78,13 @@ public class EmployeesActivity extends BaseActivity {
     }
 
     private void getMembers() {
-//        HashMap<String, String> header = new HashMap<>();
+//        HashMap<String, St/ring> header = new HashMap<>();
 //        header.put("Authorization", Engine.getInstance().userModel.getToken());
 //        HashMap<String, String> params = new HashMap<>();
 //        params.put("", String.valueOf(mDomainModel.getId()));
         final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(EmployeesActivity.this, false, null, getResources().getString(R.string.loading));
         progreeDialog.show();
-        ApiLibrary.getRequestMembrers(Constants.BASE_URL + Constants.GET_COMPANIES + "/" + mCompanyModel.getId() + Constants.GET_MEMBERS, null, null, new AppointmentApiResponse<ArrayList<MemberModel>>() {
+        ApiLibrary.getRequestMembrers(Constants.BASE_URL + Constants.GET_MEMBERS + Constants.GET_COMPANIES + "/" + mCompanyModel.getId() + Constants.GET_MEMBERS, null, null, new AppointmentApiResponse<ArrayList<MemberModel>>() {
             @Override
             public void onSuccess(ArrayList<MemberModel> response) {
                 mEmployeeModels.clear();

@@ -46,7 +46,7 @@ public class WeekTimetableConverter {
         short[][] result = new short[DAYS_IN_WEEK][QUARTERS_IN_DAY];
         for (int i = 0; i < DAYS_IN_WEEK; i++) {
 
-            int startIndex = i * QUARTERS_IN_DAY;
+            int startIndex = 0;
             int length = QUARTERS_IN_DAY;
             shortBuffer.get(result[i], startIndex, length);
         }
