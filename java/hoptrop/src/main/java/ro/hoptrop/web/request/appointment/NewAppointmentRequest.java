@@ -1,5 +1,7 @@
 package ro.hoptrop.web.request.appointment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -17,6 +19,7 @@ public class NewAppointmentRequest {
     @Max(95)
     private Integer hour; // in quarter
 
+    @JsonFormat(pattern = "dd/MM/yyy")
     private Date date;
 
     public void setServiceID(Integer serviceID) {
