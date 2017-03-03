@@ -564,7 +564,7 @@ public class ApiLibrary {
         });
     }
 
-    public static void getRequestMembrerTimeTable(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<int[]> responseApi) {
+    public static void getRequestMembrerTimeTable(final String requestURL, final HashMap<String, String> params, final HashMap<String, String> header, final AppointmentApiResponse<String> responseApi) {
         DefaultExecutorSupplier.getInstance().getServerRequestsThreadPool().execute(new Runnable() {
             @Override
             public void run() {
@@ -603,7 +603,7 @@ public class ApiLibrary {
         });
     }
 
-    private static void onMemberTimeTableSuccessBlock(final HttpURLConnection conn, final AppointmentApiResponse<int[]> responseApi) throws JSONException {
+    private static void onMemberTimeTableSuccessBlock(final HttpURLConnection conn, final AppointmentApiResponse<String> responseApi) throws JSONException {
         String response = "";
         try {
             String line;
@@ -615,22 +615,11 @@ public class ApiLibrary {
         } catch (Exception e) {
             Log.d("error: ", e.getMessage());
         }
-        final JSONObject baseJsonObj = new JSONObject(response);
+        final String finalResult = response;
         DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(new Runnable() {
             @Override
             public void run() {
-                try {
-                    int[] ints = new int[baseJsonObj.getJSONArray("timetable").length()];
-                    if (responseApi != null) {
-                        for (int i = 0; i < baseJsonObj.getJSONArray("timetable").length(); i++) {
-                            ints[i] = baseJsonObj.getJSONArray("timetable").getInt(i);
-                        }
-
-                        responseApi.onSuccess(ints);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                responseApi.onSuccess(finalResult);
             }
         });
     }

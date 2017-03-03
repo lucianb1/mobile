@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -35,6 +36,8 @@ import com.example.botos.appointment.utils.Constants;
 import com.example.botos.appointment.utils.DateUtils;
 import com.example.botos.appointment.utils.DialogUtils;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +59,7 @@ public class DayScheduleActivity extends BaseActivity {
     private MemberModel mMemberModel;
     private ArrayList<ServicesModel> mServicesModels = new ArrayList<>();
     private String[] mServicesTexts;
-    private int[] mTimeTable;
+    private short[] mTimeTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +114,8 @@ public class DayScheduleActivity extends BaseActivity {
             }
         });
         getMemmerServices();
-        addTest();
-        createHoursLayout();
-        createList();
+//        addTest();
+
     }
 
     private void setupSpinner() {
@@ -139,8 +141,10 @@ public class DayScheduleActivity extends BaseActivity {
                         break;
                 }
                 mMainLayout.removeAllViews();
-                createHoursLayout();
-                createList();
+                if (mTimeTable != null) {
+                    createHoursLayout();
+                    createList();
+                }
             }
 
             @Override
@@ -215,7 +219,7 @@ public class DayScheduleActivity extends BaseActivity {
     private void createHoursLayout() {
         LinearLayout leftLayout = new LinearLayout(DayScheduleActivity.this);
         leftLayout.setOrientation(LinearLayout.VERTICAL);
-        for (int i = 6; i < 24; i++) {
+        for (int i = 0; i < 24; i++) {
             RelativeLayout relativeLayout = new RelativeLayout(DayScheduleActivity.this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(4 * mNormalUnitHeight, 4 * mNormalUnitHeight);
             relativeLayout.setLayoutParams(params);
@@ -308,10 +312,19 @@ public class DayScheduleActivity extends BaseActivity {
         params.put("date", DateUtils.formatDate(mMainCalendar.getTime(), DateUtils.SERVER_DATE_FORMATTER_PATTERN));
         final ProgressDialog progreeDialog = DialogUtils.createProgressDialog(DayScheduleActivity.this, false, null, getResources().getString(R.string.loading));
         progreeDialog.show();
-        ApiLibrary.getRequestMembrerTimeTable(Constants.BASE_URL + Constants.GET_MEMBERS + "/" + mMemberModel.getId() + Constants.TIME_TABLE, params, null, new AppointmentApiResponse<int[]>() {
+        ApiLibrary.getRequestMembrerTimeTable(Constants.BASE_URL + Constants.GET_MEMBERS + "/" + mMemberModel.getId() + Constants.TIME_TABLE_DEFAULT, params, null, new AppointmentApiResponse<String>() {
             @Override
-            public void onSuccess(int[] response) {
-                mTimeTable = response;
+            public void onSuccess(String response) {
+//                mTimeTable = response;
+                byte[] barray = Base64.decode(response, Base64.NO_WRAP);
+                short[] sarray = new short[barray.length / 2];
+                ByteBuffer.wrap(barray).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(sarray);
+                short[][] matrix = transform(sarray);
+
+                mTimeTable = matrix[0];
+                createHoursLayout();
+                createList();
+
                 progreeDialog.dismiss();
             }
 
@@ -328,13 +341,21 @@ public class DayScheduleActivity extends BaseActivity {
         });
     }
 
+    private short[][] transform(short[] arr) {
+        short[][] mat = new short[7][96];
+        for(int i = 0; i < 7 ; i++)
+            for(int j = 0; j < 96 ; j++)
+                mat[i][j] = arr[(i * 96) + j];
+        return mat;
+    }
+
     private void createList() {
         LinearLayout rightLayout = new LinearLayout(DayScheduleActivity.this);
         rightLayout.setOrientation(LinearLayout.VERTICAL);
-        for (int i = 0; i < mTimeTable.length - 24; i++) {
+        for (int i = 0; i < mTimeTable.length; i++) {
             int count = 1;
             int x = mTimeTable[i];
-            for (int j = i + 1; j < mTimeTable.length - 24; j++) {
+            for (int j = i + 1; j < mTimeTable.length; j++) {
                 int x2 = mTimeTable[j];
                 if (x != x2) {
                     break;
@@ -350,7 +371,7 @@ public class DayScheduleActivity extends BaseActivity {
                 case 0:
                     createBussyLayout(rightLayout, count, mNormalUnitHeight);
                     break;
-                case 1:
+                case 256:
                     if (count >= mUnitNeeded) {
                         for (int j = 0; j < count; j++) {
                             RelativeLayout relativeLayout = createFreeLayout(rightLayout, 1, mNormalUnitHeight);
@@ -391,7 +412,7 @@ public class DayScheduleActivity extends BaseActivity {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.MILLISECOND, 0);
 
-        for (int i = 0; i < mTimeTable.length - 24; i++) {
+        for (int i = 0; i < mTimeTable.length; i++) {
             switch (mTimeTable[i]) {
                 case -1:
                     RelativeLayout unavailableLayout= createUnavailableLayout(linearLayout, 1, mPopupUnitHeight);
@@ -403,7 +424,7 @@ public class DayScheduleActivity extends BaseActivity {
                     TextView bussyText = (TextView) bussyLayout.getChildAt(0);
                     bussyText.setText(DateUtils.formatDate(c.getTime(), DateUtils.TIME_DATE_FORMAT));
                     break;
-                case 1:
+                case 256:
                     RelativeLayout freeLayout = createFreeLayout(linearLayout, 1, mPopupUnitHeight);
                     TextView freeText = (TextView) freeLayout.getChildAt(0);
                     freeText.setText(DateUtils.formatDate(c.getTime(), DateUtils.TIME_DATE_FORMAT));
@@ -476,7 +497,7 @@ public class DayScheduleActivity extends BaseActivity {
     }
 
     private void addTest() {
-        mTimeTable = new int[96];
+        mTimeTable = new short[96];
         mTimeTable[0] = 1;
         mTimeTable[1] = 1;
         mTimeTable[2] = 1;
