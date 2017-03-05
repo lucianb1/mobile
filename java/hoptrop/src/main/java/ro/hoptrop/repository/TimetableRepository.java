@@ -47,11 +47,11 @@ public class TimetableRepository {
         }
     }
 
-    public void createDefaultTimetable(int memberID, byte[] timetable) {
+    public void createDefaultTimetable(int memberID) {
         String sql = "INSERT INTO member_default_timetables (member_id, timetable) values (:memberID, :timetable)";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("memberID", memberID)
-                .addValue("timetable", timetable);
+                .addValue("timetable", 0); //TODO
         jdbcTemplate.update(sql ,params);
     }
 
@@ -77,10 +77,7 @@ public class TimetableRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("memberID", memberID)
                 .addValue("timetable", timetable);
-        int updatedRows = jdbcTemplate.update(sql, params);
-        if (updatedRows != 0) {
-            throw new RuntimeException(updatedRows + " rows updated");
-        }
+        jdbcTemplate.update(sql, params);
     }
 
     public void deleteDefaultTimetableForMember(int memmberID) {

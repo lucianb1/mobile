@@ -21,6 +21,7 @@ public class PrincipalUser extends User {
 
     @JsonIgnore
     private Integer companyID;
+
     @JsonIgnore
     private Integer memberID;
 

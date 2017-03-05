@@ -10,11 +10,16 @@ public class Company {
     private final Location location;
     private final int orderNr;
 
-    Company(int id, String name, Location location, int orderNr) {
+    private final String memberToken;
+    private final String memberAdminToken;
+
+    Company(int id, String name, Location location, int orderNr, String memberToken, String memberAdminToken) {
         this.id = id;
         this.name = name;
         this.location = location;
         this.orderNr = orderNr;
+        this.memberAdminToken = memberAdminToken;
+        this.memberToken = memberToken;
     }
 
     public static CompanyBuilder builder() {
@@ -33,8 +38,15 @@ public class Company {
         return location;
     }
 
-
     public int getOrderNr() {
         return orderNr;
+    }
+
+    public String getMemberToken() {
+        return memberToken;
+    }
+
+    public String getMemberAdminToken() {
+        return memberAdminToken;
     }
 }

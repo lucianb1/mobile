@@ -9,7 +9,7 @@ public class MemberJsonResponse {
 
     private int id;
     private String name;
-    private List<MemberServiceJsonResponse> service;
+    private List<MemberServiceJsonResponse> services;
 
     public int getId() {
         return id;
@@ -29,11 +29,11 @@ public class MemberJsonResponse {
         return this;
     }
 
-    public List<MemberServiceJsonResponse> getService() {
-        return service;
+    public List<MemberServiceJsonResponse> getServices() {
+        return services;
     }
 
-    public void setService(List<MemberServiceJsonResponse> service) {
-        this.service = service;
+    public void setServices(List<MemberServiceJsonResponse> services) {
+        this.services = services;
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ro.hoptrop.core.converter.DayTimetableConverter;
 import ro.hoptrop.core.converter.WeekTimetableConverter;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.timetable.DayTimetable;
@@ -62,8 +63,8 @@ public class MemberController {
 
     //TODO has member role
     @RequestMapping(value = "/secure/member/timetable/", method = RequestMethod.POST)
-    public void createTimetable(@Valid @RequestBody SetWeekTimetableRequest request, @AuthenticationPrincipal PrincipalUser principalUser) {
-        memberService.createDefaultTimetable(principalUser.getMemberID(), request.getTimetable());
+    public void updateWeekTimetable(@Valid @RequestBody SetWeekTimetableRequest request, @AuthenticationPrincipal PrincipalUser principalUser) {
+        memberService.setDefaultTimetable(principalUser.getMemberID(), request.getTimetable());
     }
 
 
@@ -77,7 +78,7 @@ public class MemberController {
     public DayTimetableJsonResponse mapToDayTimetableResponse(DayTimetable timetable) {
         DayTimetableJsonResponse response = new DayTimetableJsonResponse();
         response.setDate(timetable.getDate());
-        response.setTimetable(timetable.getTimetable());
+        response.setTimetable(DayTimetableConverter.toStringFormat(timetable.getTimetable()));
         return response;
     }
 

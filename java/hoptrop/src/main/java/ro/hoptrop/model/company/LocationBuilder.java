@@ -14,7 +14,7 @@ public class LocationBuilder {
     }
 
     public Location build() {
-        return new Location(address, latitude, longitude);
+        return new Location(address, longitude, latitude);
     }
 
     public LocationBuilder setAddress(String address) {

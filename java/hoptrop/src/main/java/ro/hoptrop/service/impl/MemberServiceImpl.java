@@ -8,6 +8,7 @@ import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.member.MemberFeature;
+import ro.hoptrop.model.member.MemberStatus;
 import ro.hoptrop.model.timetable.DayTimetable;
 import ro.hoptrop.model.timetable.WeekTimetable;
 import ro.hoptrop.model.token.member.MemberToken;
@@ -72,7 +73,9 @@ public class MemberServiceImpl implements MemberService {
             MemberToken memberToken = memberTokenRepository.findByToken(token);
             AccountType newType = memberToken.isAdmin() ? AccountType.MEMBER_ADMIN : AccountType.MEMBER;
             accountRepository.updateAccountType(accountID, newType);
-            return memberRepository.createMember(accountID, memberToken.getCompanyID(), account.getName());
+            Member member = memberRepository.createMember(accountID, memberToken.getCompanyID(), account.getName());
+            timetableRepository.createDefaultTimetable(member.getId());
+            return member;
         } else {
             //TODO update the member in case of member admin swap
             throw new BadRequestException("The user is already a member");
@@ -81,10 +84,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void createDefaultTimetable(int memberID, String timetable) {
-        timetableRepository.createDefaultTimetable(memberID, WeekTimetableConverter.toBytes(timetable));
-//        memberRepository.activateMember(memberID);
-        //TODO set some flag
+    public void setDefaultTimetable(int memberID, String timetable) {
+        Member member = memberRepository.findMember(memberID);
+        if (member.getStatus().equals(MemberStatus.PENDING_TIMETABLE)) {
+            timetableRepository.updateDefaultTimetable(memberID, WeekTimetableConverter.toBytes(timetable));
+            memberRepository.updateMemberStatus(memberID, MemberStatus.ACTIVE);
+        } else { // already active
+            //TODO check for existing appointments
+        }
     }
 
     @Override

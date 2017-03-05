@@ -6,11 +6,12 @@ public class MemberBuilder {
 	private int accountID;
 	private int companyID;
 	private String name;
+	private MemberStatus status;
 
 	MemberBuilder() {}
 
 	public Member build() {
-		return new Member(id, accountID, companyID, name);
+		return new Member(id, accountID, companyID, name, status);
 	}
 	
 	public MemberBuilder setId(int id) {
@@ -33,4 +34,8 @@ public class MemberBuilder {
 		return this;
 	}
 
+    public MemberBuilder setStatus(MemberStatus status) {
+        this.status = status;
+        return this;
+    }
 }

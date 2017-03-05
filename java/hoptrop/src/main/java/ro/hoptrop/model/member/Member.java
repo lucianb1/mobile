@@ -6,12 +6,14 @@ public class Member {
     private final int accountID;
     private final int companyID;
     private final String name;
+    private final MemberStatus status;
 
-    Member(int id, int accountID, int companyID, String name) {
+    Member(int id, int accountID, int companyID, String name, MemberStatus status) {
         this.id = id;
         this.accountID = accountID;
         this.companyID = companyID;
         this.name = name;
+        this.status = status;
     }
 
     public static MemberBuilder builder() {
@@ -43,4 +45,7 @@ public class Member {
         return name;
     }
 
+    public MemberStatus getStatus() {
+        return status;
+    }
 }

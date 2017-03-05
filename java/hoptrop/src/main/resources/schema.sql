@@ -1,13 +1,13 @@
---drop database mobile;
---create database mobile;
---use mobile;
+drop database mobile;
+create database mobile;
+use mobile;
 
 
 CREATE TABLE IF NOT EXISTS accounts (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	email VARCHAR(100) UNIQUE NOT NULL,
 	password BINARY(60) NOT NULL,
-	role ENUM("USER", "MEMBER", "MEMBER_ADMIN") NOT NULL,
+	role ENUM("USER", "MEMBER", "MEMBER_ADMIN", "ADMIN") NOT NULL,
 	phone VARCHAR(20) NOT NULL,
 	name VARCHAR(50) NOT NULL,
 	created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -27,21 +27,35 @@ CREATE TABLE IF NOT EXISTS company_domains (
     order_nr SMALLINT NOT NULL DEFAULT 0
 );
 
+
+INSERT INTO company_domains(name, order_nr)
+SELECT * FROM (
+	SELECT name, order_nr FROM company_domains UNION ALL
+	SELECT 'Frizerii', 1  FROM DUAL UNION ALL
+	SELECT 'Machiaj',  2  FROM DUAL UNION ALL
+	SELECT 'Cosmetica', 3 FROM DUAL UNION ALL
+	SELECT 'Masaj', 4     FROM DUAL
+) AS t
+WHERE (SELECT COUNT(id) FROM company_domains) = 0;
+
+
 CREATE TABLE IF NOT EXISTS companies (
     id SMALLINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     address VARCHAR(100) NOT NULL,
     coordinates POINT,
     order_nr SMALLINT NOT NULL DEFAULT 0,
+    member_token VARCHAR(20) NOT NULL,
+    member_admin_token VARCHAR(20) NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS member_tokens (
-    id SMALLINT PRIMARY KEY AUTO_INCREMENT,
-    company_id SMALLINT NOT NULL,
-    token VARCHAR(20) NOT NULL,
-    is_admin BIT NOT NULL
-);
+--CREATE TABLE IF NOT EXISTS member_tokens (
+--    id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+--    company_id SMALLINT NOT NULL,
+--    token VARCHAR(20) NOT NULL,
+--    is_admin BIT NOT NULL
+--);
 
 CREATE TABLE IF NOT EXISTS companies_to_domains (
     id SMALLINT PRIMARY KEY AUTO_INCREMENT,
@@ -54,6 +68,7 @@ CREATE TABLE IF NOT EXISTS members (
     account_id INT NOT NULL,
     company_id SMALLINT NOT NULL,
     name varchar(30) NOT NULL,
+    status VARCHAR(30) NOT NULL,
     order_nr SMALLINT NOT NULL DEFAULT 0
 );
 

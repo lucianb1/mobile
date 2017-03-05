@@ -8,7 +8,7 @@ import java.util.Date;
 public class DayTimetableJsonResponse {
 
     private Date date;
-    private short[] timetable;
+    private String timetable;
 
     public Date getDate() {
         return date;
@@ -18,11 +18,11 @@ public class DayTimetableJsonResponse {
         this.date = date;
     }
 
-    public short[] getTimetable() {
+    public String getTimetable() {
         return timetable;
     }
 
-    public void setTimetable(short[] timetable) {
+    public void setTimetable(String timetable) {
         this.timetable = timetable;
     }
 }

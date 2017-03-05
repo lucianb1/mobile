@@ -12,8 +12,10 @@ import ro.hoptrop.core.exceptions.SecurityException;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.model.facebook.FacebookUser;
+import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.token.RememberMeToken;
 import ro.hoptrop.repository.AccountRepository;
+import ro.hoptrop.repository.MemberRepository;
 import ro.hoptrop.repository.RememberMeTokenRepository;
 import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.AuthenticationService;
@@ -37,6 +39,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private FacebookUtils facebookUtils;
@@ -85,7 +90,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public MobileLoginResponse loginWithFacebook(String token) {
         String longToken = facebookUtils.createFacebookLongLivedToken(token);
         FacebookTemplate facebook = new FacebookTemplate(longToken);
-        String [] fields = {"email",  "name" };
+        String[] fields = {"email", "name"};
         FacebookUser loadedUser = facebook.fetchObject("me", FacebookUser.class, fields);
         String email = loadedUser.getEmail();
         String name = loadedUser.getName();
@@ -98,7 +103,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return this.loginAccount(account);
     }
 
-    public String createTokenForAccount(int accountID) {
+    private String createTokenForAccount(int accountID) {
         String token = TokenUtils.generateToken();
         while (tokenRepository.tokenExists(token)) {
             token = TokenUtils.generateToken();
@@ -107,17 +112,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return token;
     }
 
-    public PrincipalUser mapToPrincipal(Account account) {
-        return new PrincipalUser(account.getEmail(), "", createAuthorities(account.getType().name()))
-                .setName(account.getName())
-                .setPhone(account.getPhone())
-                .setId(account.getId());
+    private PrincipalUser mapToPrincipal(Account account) {
+        PrincipalUser principal = new PrincipalUser(account.getEmail(), "", createAuthorities(account.getType().name()))
+            .setName(account.getName())
+            .setPhone(account.getPhone())
+            .setId(account.getId());
+        //TODO maybe store in account table also the member/company id
+        if (!account.getType().equals(AccountType.USER)) { // is member
+            Member member = memberRepository.findMemberByAccount(account.getId());
+            principal.setMemberID(member.getId());
+            principal.setCompanyID(member.getCompanyID());
+        }
+        return principal;
     }
 
     private MobileLoginResponse mapToLoginResponse(Account account, String token) {
         return new MobileLoginResponse()
-                .setToken(token)
-                .setUser(mapToPrincipal(account));
+            .setToken(token)
+            .setUser(mapToPrincipal(account));
     }
 
     private List<GrantedAuthority> createAuthorities(String role) {

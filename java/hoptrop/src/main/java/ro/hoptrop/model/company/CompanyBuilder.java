@@ -9,12 +9,14 @@ public class CompanyBuilder {
     private String name;
     private Location location;
     private int orderNr;
+    private String memberToken;
+    private String memberAdminToken;
 
     CompanyBuilder() {
     }
 
     public Company build() {
-        return new Company(id, name, location, orderNr);
+        return new Company(id, name, location, orderNr, memberToken, memberAdminToken);
     }
 
     public CompanyBuilder setId(int id) {
@@ -34,6 +36,16 @@ public class CompanyBuilder {
 
     public CompanyBuilder setOrderNr(int orderNr) {
         this.orderNr = orderNr;
+        return this;
+    }
+
+    public CompanyBuilder setMemberToken(String memberToken) {
+        this.memberToken = memberToken;
+        return this;
+    }
+
+    public CompanyBuilder setMemberAdminToken(String memberAdminToken) {
+        this.memberAdminToken = memberAdminToken;
         return this;
     }
 }

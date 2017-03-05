@@ -27,7 +27,7 @@ public interface MemberService {
 
     Member registerByToken(int accountID, String token); //TODO return something
 
-    void createDefaultTimetable(int memberID, String timetable);
+    void setDefaultTimetable(int memberID, String timetable);
 
     void updateDefaultTimetable(int memberID, String timetable);
 

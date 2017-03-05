@@ -9,9 +9,7 @@ import ro.hoptrop.repository.CompanyRepository;
 import ro.hoptrop.repository.MemberTokenRepository;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.utils.TokenUtils;
-import ro.hoptrop.web.request.member.CreateMemberTokenRequest;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -30,12 +28,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company createCompany(String name, Location location, Set<Integer> domains, int orderNr) {
         //TODO check unique name
-        Company company = companyRepository.createCompany(name, location, orderNr);
-        memberTokenRepository.createMemberTokens(Arrays.asList(
-                new CreateMemberTokenRequest().setCompanyID(company.getId()).setToken(TokenUtils.generateMembersToken()).setIsAdmin(false), // members
-                new CreateMemberTokenRequest().setCompanyID(company.getId()).setToken(TokenUtils.generateMembersToken()).setIsAdmin(true) // admin
-        ));
-        //TODO validate domains actually exists
+        String memberToken = TokenUtils.generateMembersToken();
+        String memberAdminToken = TokenUtils.generateMembersToken();
+        Company company = companyRepository.createCompany(name, location, orderNr, memberToken, memberAdminToken);
+
+        //TODO validate domains actually exist
         companyRepository.setCompanyDomains(company.getId(), domains);
         return company;
     }

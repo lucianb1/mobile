@@ -1,5 +1,6 @@
 package ro.hoptrop.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -55,7 +56,7 @@ public class AccountRepository {
     }
 
     public void updateAccountDetails(int id, String newName, String newPhone) {
-        if (newName == null || newPhone == null) {
+        if (StringUtils.isBlank(newName) || StringUtils.isBlank(newPhone)) {
             throw new IllegalArgumentException("Null argument");
         }
         String sql = "UPDATE accounts SET name = :newName, phone = :newPhone where id = :id";
