@@ -1,12 +1,12 @@
 package ro.hoptrop.test.tests.company;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import ro.hoptrop.model.company.Location;
 import ro.hoptrop.test.client.CompanyControllerClient;
 import ro.hoptrop.test.config.BaseTestClass;
+import ro.hoptrop.test.mock.EdgeServerResponse;
 import ro.hoptrop.test.utils.AssertUtils;
 import ro.hoptrop.web.request.company.CreateCompanyRequest;
 import ro.hoptrop.web.response.company.CreateCompanyJsonResponse;
@@ -30,12 +30,12 @@ public class CreateCompanyTest extends BaseTestClass {
             .setLocation(location)
             .setName(name)
             .setDomains(Collections.singleton(1));
-
-        ResponseEntity<CreateCompanyJsonResponse> response = companyClient.createCompanyRaw(request, token);
+        EdgeServerResponse<CreateCompanyJsonResponse> response = companyClient.createCompanyRaw(request, token);
         AssertUtils.assertIsSuccessful(response);
-        CreateCompanyJsonResponse responseBody = response.getBody();
-        Assert.assertEquals(responseBody.getLocation(), location);
-        Assert.assertEquals(responseBody.getName(), name);
+        Assert.assertNotNull(response.getContent());
+        CreateCompanyJsonResponse content = response.getContent();
+        Assert.assertEquals(content.getLocation(), location);
+        Assert.assertEquals(content.getName(), name);
 
 
     }

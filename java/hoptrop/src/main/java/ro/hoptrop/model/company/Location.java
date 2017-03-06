@@ -10,10 +10,13 @@ import java.util.Objects;
 public class Location {
 
     @NotBlank
-    private final String address;
+    private String address;
 
-    private final Double latitude;
-    private final Double longitude;
+    private Double latitude;
+    private Double longitude;
+
+    public Location() {
+    }
 
     Location(String address, Double longitude, Double latitude) {
         this.address = address;

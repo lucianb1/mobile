@@ -8,6 +8,7 @@ import ro.hoptrop.security.PrincipalUser;
 import ro.hoptrop.service.CompanyService;
 import ro.hoptrop.web.request.company.CreateCompanyRequest;
 import ro.hoptrop.web.response.company.CompanyJsonResponse;
+import ro.hoptrop.web.response.company.CreateCompanyJsonResponse;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,8 +25,9 @@ public class CompanyController {
 
     //TODO admin role
     @RequestMapping(value = "/secure/companies", method = RequestMethod.POST)
-    public void createCompany(@Valid @RequestBody CreateCompanyRequest request, @AuthenticationPrincipal PrincipalUser principal) {
+    public CreateCompanyJsonResponse createCompany(@Valid @RequestBody CreateCompanyRequest request, @AuthenticationPrincipal PrincipalUser principal) {
         companyService.createCompany(request.getName(), request.getLocation(), request.getDomains(), 0); //TODO
+        return null;
     }
 
     @RequestMapping(value ="/companies", method = RequestMethod.GET)

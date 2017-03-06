@@ -1,10 +1,13 @@
 package ro.hoptrop.test.client;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.Assert;
+import ro.hoptrop.test.mock.EdgeServer;
+import ro.hoptrop.test.mock.EdgeServerRequest;
+import ro.hoptrop.test.mock.EdgeServerRequestBuilder;
+import ro.hoptrop.test.mock.EdgeServerResponse;
 import ro.hoptrop.test.utils.AssertUtils;
 import ro.hoptrop.web.request.company.CreateCompanyRequest;
 import ro.hoptrop.web.response.company.CreateCompanyJsonResponse;
@@ -15,19 +18,24 @@ import ro.hoptrop.web.response.company.CreateCompanyJsonResponse;
 @Component
 public class CompanyControllerClient extends BaseControllerClient {
 
+    @Autowired
+    private EdgeServer edgeServer;
+
     public CreateCompanyJsonResponse createCompany(CreateCompanyRequest request, String token) {
-        ResponseEntity<CreateCompanyJsonResponse> response = createCompanyRaw(request, token);
+        EdgeServerResponse<CreateCompanyJsonResponse> response = createCompanyRaw(request, token);
         AssertUtils.assertIsSuccessful(response);
-        Assert.assertTrue(response.hasBody());
-        return response.getBody();
+        Assert.assertNotNull(response.getContent());
+        return response.getContent();
     }
 
-    public ResponseEntity<CreateCompanyJsonResponse> createCompanyRaw(CreateCompanyRequest request, String token) {
-        String url = BASE_URL + "/secure/companies";
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, token);
-        HttpEntity entity = new HttpEntity<>(request, headers);
-        return restTemplate.postForEntity(url, entity, CreateCompanyJsonResponse.class);
+    public EdgeServerResponse<CreateCompanyJsonResponse> createCompanyRaw(CreateCompanyRequest request, String token) {
+        EdgeServerRequest serverRequest = new EdgeServerRequestBuilder()
+            .setUrl("/secure/companies")
+            .setBody(request)
+            .setMethod(RequestMethod.POST)
+            .setToken(token)
+            .build();
+        return edgeServer.executeRequest(serverRequest, CreateCompanyJsonResponse.class);
     }
 
 }
