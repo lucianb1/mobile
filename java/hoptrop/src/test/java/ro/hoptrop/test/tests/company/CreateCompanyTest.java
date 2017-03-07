@@ -36,6 +36,8 @@ public class CreateCompanyTest extends BaseTestClass {
         CreateCompanyJsonResponse content = response.getContent();
         Assert.assertEquals(content.getLocation(), location);
         Assert.assertEquals(content.getName(), name);
+        Assert.assertNotNull(content.getMemberToken());
+        Assert.assertNotNull(content.getMemberAdminToken());
 
 
     }

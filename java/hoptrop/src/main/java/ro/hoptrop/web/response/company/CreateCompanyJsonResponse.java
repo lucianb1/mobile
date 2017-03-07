@@ -28,4 +28,24 @@ public class CreateCompanyJsonResponse {
     public String getMemberAdminToken() {
         return memberAdminToken;
     }
+
+    public CreateCompanyJsonResponse setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public CreateCompanyJsonResponse setLocation(Location location) {
+        this.location = location;
+        return this;
+    }
+
+    public CreateCompanyJsonResponse setMemberToken(String memberToken) {
+        this.memberToken = memberToken;
+        return this;
+    }
+
+    public CreateCompanyJsonResponse setMemberAdminToken(String memberAdminToken) {
+        this.memberAdminToken = memberAdminToken;
+        return this;
+    }
 }

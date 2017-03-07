@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ro.hoptrop.core.converter.WeekTimetableConverter;
+import ro.hoptrop.core.exceptions.AlreadyExistsException;
 import ro.hoptrop.model.account.Account;
 import ro.hoptrop.model.account.AccountType;
 import ro.hoptrop.model.company.Company;
@@ -15,11 +16,9 @@ import ro.hoptrop.model.company.Location;
 import ro.hoptrop.model.domain.CompanyDomain;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.token.member.MemberToken;
-import ro.hoptrop.service.AccountService;
-import ro.hoptrop.service.CompanyService;
-import ro.hoptrop.service.DomainService;
-import ro.hoptrop.service.MemberService;
+import ro.hoptrop.service.*;
 import ro.hoptrop.web.request.member.CreateMemberServiceRequest;
+import ro.hoptrop.web.response.MobileLoginResponse;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,6 +40,19 @@ public class GeneratorController {
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public MobileLoginResponse generateAdmin() throws AlreadyExistsException {
+        String email = RandomStringUtils.randomAlphabetic(10) + "@" + RandomStringUtils.randomAlphanumeric(5) + ".com";
+        String name = RandomStringUtils.randomAlphanumeric(10);
+        String phone = RandomStringUtils.randomNumeric(10);
+        String password = RandomStringUtils.randomAlphanumeric(10).toLowerCase();
+        Account account = accountService.registerUser(email, password, name, phone);
+        MobileLoginResponse mobileLoginResponse = authenticationService.loginAccount(account);
+        return mobileLoginResponse;
+    }
 
     @RequestMapping(value = "/{users}/{companies}", method = RequestMethod.GET)
     public void generate(@PathVariable int users, @PathVariable int companies) {

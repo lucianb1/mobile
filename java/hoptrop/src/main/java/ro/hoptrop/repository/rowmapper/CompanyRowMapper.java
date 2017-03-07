@@ -15,14 +15,16 @@ public class CompanyRowMapper implements RowMapper<Company> {
     @Override
     public Company mapRow(ResultSet rs, int i) throws SQLException {
         return Company.builder()
-                .setId(rs.getInt("id"))
-                .setName(rs.getString("name"))
-                .setLocation(Location.builder()
-                        .setAddress(rs.getString("address"))
-                        .setLatitude((Double) rs.getObject("lat"))
-                        .setLongitude((Double) rs.getObject("lon"))
-                        .build())
-                .setOrderNr(rs.getInt("order_nr"))
-                .build();
+            .setId(rs.getInt("id"))
+            .setName(rs.getString("name"))
+            .setLocation(Location.builder()
+                .setAddress(rs.getString("address"))
+                .setLatitude((Double) rs.getObject("lat"))
+                .setLongitude((Double) rs.getObject("lon"))
+                .build())
+            .setOrderNr(rs.getInt("order_nr"))
+            .setMemberToken(rs.getString("member_token"))
+            .setMemberAdminToken(rs.getString("member_admin_token"))
+            .build();
     }
 }

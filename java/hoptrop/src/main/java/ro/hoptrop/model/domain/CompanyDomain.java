@@ -5,9 +5,12 @@ package ro.hoptrop.model.domain;
  */
 public class CompanyDomain {
 
-    private final int id;
-    private final String name;
-    private final int orderNr;
+    private int id;
+    private String name;
+    private int orderNr;
+
+    public CompanyDomain() {
+    }
 
     CompanyDomain(int id, String name, int orderNr) {
         this.id = id;

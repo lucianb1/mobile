@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Luci on 12-Dec-16.
  */
 public interface DomainService {
+
     List<CompanyDomain> getAllCompanyDomains();
 
     void createCompanyDomain(String name, int orderNr);

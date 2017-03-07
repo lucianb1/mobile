@@ -1,7 +1,7 @@
 package ro.hoptrop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ro.hoptrop.model.company.Company;
 import ro.hoptrop.security.PrincipalUser;
@@ -23,11 +23,15 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
-    //TODO admin role
+    @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/secure/companies", method = RequestMethod.POST)
-    public CreateCompanyJsonResponse createCompany(@Valid @RequestBody CreateCompanyRequest request, @AuthenticationPrincipal PrincipalUser principal) {
-        companyService.createCompany(request.getName(), request.getLocation(), request.getDomains(), 0); //TODO
-        return null;
+    public CreateCompanyJsonResponse createCompany(@Valid @RequestBody CreateCompanyRequest request) {
+        Company company = companyService.createCompany(request.getName(), request.getLocation(), request.getDomains(), 0);
+        return new CreateCompanyJsonResponse()
+            .setName(company.getName())
+            .setLocation(company.getLocation())
+            .setMemberAdminToken(company.getMemberAdminToken())
+            .setMemberToken(company.getMemberToken());
     }
 
     @RequestMapping(value ="/companies", method = RequestMethod.GET)

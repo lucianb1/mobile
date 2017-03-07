@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ro.hoptrop.utils.JsonUtils;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.Filter;
 import java.util.Map;
 
 /**
@@ -23,15 +25,40 @@ import java.util.Map;
 @Service
 public class EdgeServer {
 
-    private final MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    public EdgeServer(WebApplicationContext context) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    private Filter springSecurityFilterChain;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @PostConstruct
+    public void initMvc() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+            .addFilter(springSecurityFilterChain)
+            .build();
     }
 
     public <T> EdgeServerResponse<T> executeRequest(EdgeServerRequest request, Class<T> responseType) {
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post(request.getUrl());
+        MockHttpServletRequestBuilder mockRequest;
+        switch (request.getMethod()) {
+            case GET:
+                mockRequest = MockMvcRequestBuilders.get(request.getUrl());
+                break;
+            case POST:
+                mockRequest = MockMvcRequestBuilders.post(request.getUrl());
+                break;
+            case PUT:
+                mockRequest = MockMvcRequestBuilders.put(request.getUrl());
+                break;
+            case DELETE:
+                mockRequest = MockMvcRequestBuilders.delete(request.getUrl());
+                break;
+            default:
+                throw new RuntimeException("Invalid method value");
+        }
+
         mockRequest.accept(MediaType.APPLICATION_JSON);
         mockRequest.contentType(MediaType.APPLICATION_JSON);
 
@@ -49,7 +76,7 @@ public class EdgeServer {
             MvcResult mvcResult = this.mockMvc.perform(mockRequest).andReturn();
             MockHttpServletResponse response = mvcResult.getResponse();
             T result = null;
-            if (response.getStatus() != HttpStatus.OK.value() && StringUtils.isNotBlank(response.getContentAsString()) && responseType != null) {
+            if (response.getStatus() == HttpStatus.OK.value() && StringUtils.isNotBlank(response.getContentAsString()) && responseType != null) {
                 result = JsonUtils.fromJson(response.getContentAsString(), responseType);
             }
             return new EdgeServerResponse<>(response.getStatus(), result);

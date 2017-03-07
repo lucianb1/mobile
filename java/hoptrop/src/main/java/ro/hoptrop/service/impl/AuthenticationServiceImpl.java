@@ -118,7 +118,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .setPhone(account.getPhone())
             .setId(account.getId());
         //TODO maybe store in account table also the member/company id
-        if (!account.getType().equals(AccountType.USER)) { // is member
+        if (account.getType().equals(AccountType.MEMBER) || account.getType().equals(AccountType.MEMBER_ADMIN)) { // is member
             Member member = memberRepository.findMemberByAccount(account.getId());
             principal.setMemberID(member.getId());
             principal.setCompanyID(member.getCompanyID());
