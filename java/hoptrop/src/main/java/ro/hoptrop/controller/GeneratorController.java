@@ -16,6 +16,7 @@ import ro.hoptrop.model.company.Location;
 import ro.hoptrop.model.domain.CompanyDomain;
 import ro.hoptrop.model.member.Member;
 import ro.hoptrop.model.token.member.MemberToken;
+import ro.hoptrop.repository.AccountRepository;
 import ro.hoptrop.service.*;
 import ro.hoptrop.web.request.member.CreateMemberServiceRequest;
 import ro.hoptrop.web.response.MobileLoginResponse;
@@ -41,6 +42,9 @@ public class GeneratorController {
     private CompanyService companyService;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
     private AuthenticationService authenticationService;
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
@@ -50,7 +54,9 @@ public class GeneratorController {
         String phone = RandomStringUtils.randomNumeric(10);
         String password = RandomStringUtils.randomAlphanumeric(10).toLowerCase();
         Account account = accountService.registerUser(email, password, name, phone);
-        MobileLoginResponse mobileLoginResponse = authenticationService.loginAccount(account);
+        accountRepository.updateAccountType(account.getId(), AccountType.ADMIN);
+        Account updatedAccount = accountRepository.findAccount(account.getId());
+        MobileLoginResponse mobileLoginResponse = authenticationService.loginAccount(updatedAccount);
         return mobileLoginResponse;
     }
 
